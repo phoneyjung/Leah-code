@@ -82,7 +82,7 @@ svg{display:block}
 #nameIn{width:150px;height:52px;border-radius:16px;border:3px solid var(--purple-l);background:#fff;font:inherit;font-size:19px;text-align:center;color:var(--ink);-webkit-user-select:text;user-select:text}
 #btnPlay{font-size:24px;padding:14px 40px}
 .home-tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-@media (orientation:portrait){.home-wrap{flex-direction:column;justify-content:center}.home-art{flex:0 0 auto;height:auto;width:100%}.home-art .title-img{margin-top:42px;max-height:min(33vh,calc(100vh - 470px))}.stage-oval{width:min(100%,420px)}}
+@media (orientation:portrait){.home-wrap{flex-direction:column;justify-content:center}.home-art{flex:0 0 auto;height:auto;width:100%}.home-art .title-img{margin-top:50px;max-height:min(33vh,calc(100vh - 480px))}.stage-oval{width:min(100%,420px)}}
 @media (max-height:340px){.title small{display:none}.title{font-size:22px!important}.ava,.pet{width:46px!important;height:46px!important}.pet span{display:none}#nameIn{height:40px!important;width:120px}#btnPlay{font-size:18px!important;padding:8px 24px!important}.home-tools .chip{font-size:13px!important;padding:4px 10px!important}.home-side{gap:6px!important}.home-wrap{gap:6px}}
 @media (max-height:420px){.intro-face{width:72px;flex-basis:72px}.intro-idea{font-size:20px}.p{font-size:15px;margin:4px 0}.ic .card{--cs:44px}.win-title{font-size:24px}.bs{width:58px;height:58px}.sheet{padding:14px 18px}.sheet .row.end{bottom:-14px;padding-bottom:10px;margin-bottom:-10px}}
 @media (max-height:420px){.fan{display:none}.title{font-size:26px}.title small{font-size:13px}.sub{display:none}.home-side{gap:8px}.ava{width:54px;height:54px;border-radius:16px}#nameIn{height:44px}.pet{width:54px;height:54px;border-radius:16px}#btnPlay{font-size:21px;padding:10px 30px}.chip{padding:5px 12px;font-size:14px}}
@@ -117,6 +117,8 @@ svg{display:block}
 html[lang=en] .lv.fresh::after{content:'New'}
 .lv.next{box-shadow:0 0 0 3px var(--gold),0 4px 0 var(--purple-l);animation:breathe 1.8s ease-in-out infinite}
 .lv.lock{opacity:.55;box-shadow:none}
+.lv.skipped{box-shadow:0 0 0 3px var(--gold) inset,0 4px 0 var(--purple-l)}
+.lv.skipped::after{content:'↷';position:absolute;top:2px;right:5px;font-size:13px;color:var(--gold-d,#C98A00);font-weight:700}
 .world.locked{opacity:.75}
 
 /* หน้าเล่น */
@@ -155,6 +157,7 @@ html[lang=en] .lv.fresh::after{content:'New'}
 .ent.star>*{width:74%;height:74%;margin:13%}
 .ent.q>*{width:80%;height:80%;margin:10%}
 .ent.cat{z-index:2}
+.ent.hero.beside{margin-left:calc(var(--c) * -.34);margin-top:calc(var(--c) * .06)}
 .ent.hero{z-index:3}
 .hb,.hf{width:100%;height:100%}
 .hero.left .hf{transform:scaleX(-1)}
@@ -288,6 +291,10 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .wd-art,.end-art{display:flex;justify-content:center;align-items:flex-end;gap:4%;margin:0 auto 6px;max-width:420px}
 .wd-art>div,.end-art>div{width:30%}
 .wd-art .wd-star{width:22%;animation:float 2.4s ease-in-out infinite}
+.nw{white-space:nowrap}
+@media (orientation:landscape) and (max-height:420px){.home-art{flex:0 0 50%!important;padding-top:50px;box-sizing:border-box}.home-tools{flex-wrap:nowrap!important;gap:6px!important}.home-tools .chip{padding:4px 9px!important;font-size:13px!important;white-space:nowrap}}
+.lv-w{font-style:normal}
+@media (max-width:400px){.lv-w{display:none}}
 .end-family{display:block;width:100%;max-width:520px;margin:0 auto 10px;border-radius:18px;box-shadow:0 6px 18px rgba(80,60,140,.18)}
 .gate input{width:140px;height:56px;border-radius:16px;border:3px solid var(--purple-l);font:inherit;font-size:28px;text-align:center;background:#fff;color:var(--ink);-webkit-user-select:text;user-select:text}
 .gate input.err{border-color:var(--peach);animation:shake .4s}
@@ -388,7 +395,9 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .mine-mini{display:grid;gap:1px;width:58px;flex:0 0 58px}
 .mine-mini i{display:block;aspect-ratio:1;border-radius:2px;background:var(--stone)}
 .mine-mini i.w{background:var(--purple-d)}.mine-mini i.s{background:var(--gold)}.mine-mini i.q{background:var(--purple-l)}.mine-mini i.h{background:#8FCBEF}.mine-mini i.c{background:#F2A65A}
-.mine-txt{flex:1;min-width:0;display:flex;flex-direction:column}.mine-txt b{font-size:15px}.mine-txt span{font-size:13px;color:var(--purple-d)}
+.mine-txt{flex:1;min-width:0;display:flex;flex-direction:column}
+.mine-btns{display:flex;gap:6px;flex:0 0 auto}
+@media (max-width:440px){.mine-row{flex-wrap:wrap}.mine-btns{flex-basis:100%;justify-content:flex-end}}.mine-txt b{font-size:15px}.mine-txt span{font-size:13px;color:var(--purple-d)}
 .help-steps{text-align:left;margin:6px 0 0;padding-left:22px;font-size:16px;line-height:1.5}
 .lv-name b{overflow:hidden;text-overflow:ellipsis;max-width:46vw}
 @keyframes popin{from{transform:scale(.88);opacity:0}to{transform:none;opacity:1}}
@@ -415,7 +424,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
     <div class="home-art" id="homeArt"></div>
     <div class="home-side">
       <h1 class="title"><small data-t="h_small">เกมฝึกโค้ดดิ้ง</small><span data-t="title">ลีอากับการ์ดเวทมนตร์</span></h1>
-      <p class="sub" data-t="h_sub">เรียงการ์ดคาถา พาไปหาน้องหมา สำหรับเด็ก 5–10 ขวบ</p>
+      <p class="sub" data-t="h_sub">เรียงการ์ดคาถา พาไปหาน้องหมา สำหรับเด็ก <span class="nw">5–10 ขวบ</span></p>
       <div class="who">
         <button class="ava" data-ava="girl" data-ta="a_girl" aria-label="เลือกตัวละครเด็กผู้หญิง"></button>
         <button class="ava" data-ava="boy" data-ta="a_boy" aria-label="เลือกตัวละครเด็กผู้ชาย"></button>
@@ -503,7 +512,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
    ไฟล์เดียว ใช้กับ GitHub Pages + ติดตั้งเป็นแอป (PWA)
    ใส่ภาพ/เสียง/วิดีโอเองได้: วางไฟล์ตามชื่อใน ASSETS / VOICE
    ========================================================= */
-const VERSION='2.1.4';
+const VERSION='2.2.0';
 
 /*ENGINE_START*/
 const MOVES={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]};
@@ -615,8 +624,8 @@ const WORLDS=[
 {n:5,name:'ถ้ำคริสตัล',idea:'ทำซ้ำ (ลูป)',age:'6+',cards:['U','D','L','R','P','loop'],levels:[
   {map:['......','H....C','......'],sol:'5(R)'},
   {map:['.C.','...','...','...','.H.'],sol:'4(U)'},
-  {map:['....C','.....','.....','H....'],sol:'3(U)4(R)'},
-  {map:['......','H****C','......'],sol:'4(RP)R',demo:'d5b'},
+  {map:['....C','.....','.....','H....'],sol:'3(U)4(R)',demo:'d5b'},
+  {map:['......','H****C','......'],sol:'4(RP)R'},
   {map:['H...','#...','##..','###C'],sol:'3(RD)'},
   {map:['####C','###..','##..#','#..##','H.###'],sol:'4(RU)'},
   {map:['####C','###*.','##*.#','#*.##','H.###'],sol:'3(RUP)RU'},
@@ -658,7 +667,7 @@ const tx=(th,en)=>isEN()?en:th;
 const UI={
   title:['ลีอากับการ์ดเวทมนตร์','Leah and the Magic Cards'],
   h_small:['เกมฝึกโค้ดดิ้ง','A coding game'],
-  h_sub:['เรียงการ์ดคาถา พาไปหาน้องหมา สำหรับเด็ก 5–10 ขวบ','Line up magic cards to find the puppy. For kids 5–10.'],
+  h_sub:['เรียงการ์ดคาถา พาไปหาน้องหมา สำหรับเด็ก <span class="nw">5–10 ขวบ</span>','Line up magic cards to find the puppy. For kids <span class="nw">5–10</span>.'],
   a_girl:['เลือกตัวละครเด็กผู้หญิง','Play as the girl'],
   a_boy:['เลือกตัวละครเด็กผู้ชาย','Play as the boy'],
   name_ph:['ชื่อของหนู','Your name'],
@@ -707,7 +716,7 @@ const VOICE_RAW={
   w3:'การ์ดรูปมือใช้เก็บดาว ต้องเดินไปยืนบนดาวก่อน แล้วค่อยใช้การ์ดมือ เก็บให้ครบแล้วไปหาน้อง{pet}',
   w4:'พ่อมดเขียนคาถาผิดไป กดร่ายคาถาดูว่าผิดตรงไหน แตะการ์ดใบที่ผิด แล้วแตะการ์ดใหม่เพื่อเปลี่ยน',
   w5:'การ์ดทำซ้ำ จะทำการ์ดที่อยู่ในวงซ้ำหลายรอบ แตะตัวเลขเพื่อเปลี่ยนจำนวนรอบ แตะช่องบวกนอกวงเพื่อวางการ์ดต่อ',
-  w6:'ดาวจะโผล่ไม่ซ้ำที่ทุกครั้ง การ์ดเครื่องหมายคำถามคือ ถ้ามีดาวให้เก็บ ถ้าไม่มีก็ทำต่อได้เลย',
+  w6:'ดาวจะโผล่ไม่ซ้ำที่ทุกครั้ง การ์ดถ้ามีดาวจะเก็บดาวให้เฉพาะตอนที่มีดาว ถ้าไม่มีก็ทำต่อได้เลย',
   w7:'สร้างคาถาของตัวเองในแถวประกาย แล้วใช้การ์ดประกายเรียกคาถานั้นกี่ครั้งก็ได้',
   w8:'ปราสาทด่านสุดท้าย ใช้การ์ดทุกแบบที่เรียนมา สู้ๆ นะ',
   k_step:'แตะลูกศร พาไปหาน้อง{pet}นะ',
@@ -767,7 +776,13 @@ const VOICE_RAW={
   d7a:'แตะแถวประกาย แล้วใส่การ์ดเป็นคาถาของฉัน',
   d7b:'กลับมาที่คาถาหลัก ใส่การ์ดประกาย เพื่อเรียกคาถาของฉัน',
   d8a:'ด่านปราสาทใช้การ์ดหลายแบบรวมกัน ทำซ้ำ มือ และถ้ามีดาว',
-  d8b:'ทางที่เหมือนกันสองช่วง ใส่ไว้ในคาถาของฉัน แล้วเรียกใช้สองครั้ง'
+  d8b:'ทางที่เหมือนกันสองช่วง ใส่ไว้ในคาถาของฉัน แล้วเรียกใช้สองครั้ง',
+  no_nest:'วางวงซ้อนในวงไม่ได้นะ',
+  no_fn_in_fn:'ในคาถาของฉันใช้การ์ดประกายไม่ได้นะ',
+  too_many:'การ์ดเยอะเกินไปแล้ว ลองใช้ทำซ้ำดูนะ',
+  too_many2:'การ์ดเยอะเกินไปแล้ว ลองเริ่มใหม่นะ',
+  no_undo:'ย้อนต่อไม่ได้แล้ว',
+  not_reached_loop:'ยังไม่ถึงน้อง{pet}เลย ลองเพิ่มรอบหรือเพิ่มการ์ดดูนะ'
 };
 /* English voice — same keys as VOICE_RAW, files in audio/en/ */
 const VOICE_RAW_EN={
@@ -777,7 +792,7 @@ const VOICE_RAW_EN={
   w3:'The hand card picks up a star. Stand on the star first, then use the hand card. Get every star, then go to {pet}.',
   w4:'The wizard’s spell has a mistake. Tap Cast Spell to find it. Tap the wrong card, then tap a new card to swap it.',
   w5:'The repeat card does the cards inside the loop again and again. Tap the number to change how many times. Tap the plus outside the loop to add more cards.',
-  w6:'Stars pop up in different places each time. The question mark card means: if there is a star, pick it up. If not, just keep going.',
+  w6:'Stars pop up in different places each time. The if-star card picks up a star only when there is one. If not, just keep going.',
   w7:'Make your own spell in the sparkle row, then use the sparkle card to call it as many times as you like.',
   w8:'The last castle! Use every card you have learned. You can do it!',
   k_step:'Tap the arrows to go find {pet}.',
@@ -837,7 +852,13 @@ const VOICE_RAW_EN={
   d7a:'Tap the sparkle row and put cards in to make your own spell.',
   d7b:'Back in the main spell, add the sparkle card to call your own spell.',
   d8a:'Castle levels mix many cards: repeat, hand, and if-star.',
-  d8b:'The path has the same part twice. Put it in your own spell and call it two times.'
+  d8b:'The path has the same part twice. Put it in your own spell and call it two times.',
+  no_nest:'You can’t put a loop inside a loop.',
+  no_fn_in_fn:'The sparkle card can’t go inside your own spell.',
+  too_many:'Too many cards! Try the repeat card.',
+  too_many2:'Too many cards! Try starting again.',
+  no_undo:'Nothing more to undo.',
+  not_reached_loop:'You haven’t reached {pet} yet. Try more turns or more cards.'
 };
 /* น้องหมาที่บ้านลีอา — เลือกได้ที่หน้าแรก */
 const PETS={kim:{name:'คิม',en:'Kim'},dukdik:{name:'ดุ๊กดิ๊ก',en:'Dukdik'}};
@@ -968,7 +989,9 @@ const totalStars=()=>ALL.reduce((s,l)=>s+(S.best[l.id]||0),0);
 const IMG={};
 function probeAssets(){
   if(location.protocol==='file:')return Promise.resolve();
-  const jobs=Object.entries(ASSETS).map(([k,src])=>new Promise(res=>{const im=new Image();im.onload=()=>{IMG[k]={src,px:im.naturalWidth<=128};res()};im.onerror=()=>res();im.src=src}));
+  const load=([k,src])=>new Promise(res=>{const im=new Image();im.onload=()=>{IMG[k]={src,px:im.naturalWidth<=128};res(true)};im.onerror=()=>res(false);im.src=src});
+  /* พื้นกระดาน (ไม่บังคับ): ลองแค่ tile-1 ก่อน มีจริงค่อยโหลดที่เหลือ จะได้ไม่ขอไฟล์ที่ไม่มี 8 ไฟล์ทุกครั้ง */
+  const jobs=Object.entries(ASSETS).filter(([k])=>!/^tile[2-8]$/.test(k)).map(e=>e[0]==='tile1'?load(e).then(ok=>ok&&Promise.all(Object.entries(ASSETS).filter(([k])=>/^tile[2-8]$/.test(k)).map(load))):load(e));
   return Promise.race([Promise.all(jobs),sleep(2500)]);
 }
 const art=(k,fb)=>IMG[k]?`<img src="${IMG[k].src}" alt="" draggable="false" class="${IMG[k].px?'px':''}">`:(typeof fb==='function'?fb():fb);
@@ -995,6 +1018,7 @@ function tts(text){if(!('speechSynthesis' in window))return;let vs=[];try{vs=spe
   if(isEN()){if(!enVoice&&vs.length)pickVoice();try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';if(enVoice)u.voice=enVoice;u.rate=.95;u.pitch=1.1;speechSynthesis.speak(u)}catch(e){}return}
   if(!thVoice&&vs.length)pickVoice();if(!thVoice&&vs.length)return;
   try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='th-TH';if(thVoice)u.voice=thVoice;u.rate=.92;u.pitch=1.1;speechSynthesis.speak(u)}catch(e){}}
+function voiceBusy(){try{if(curAudio&&!curAudio.paused&&!curAudio.ended)return true;return !!(window.speechSynthesis&&speechSynthesis.speaking)}catch(e){return false}}
 function stopVoice(){try{curAudio&&curAudio.pause()}catch(e){}curAudio=null;try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}}
 function speak(id){
   if(!S.voice)return;stopVoice();const text=VOICE[id];if(!text)return;const f=voiceDir(S.lang)+voiceFile(id)+'.mp3';
@@ -1009,6 +1033,7 @@ function speak(id){
 function show(id){$$('.screen').forEach(s=>s.classList.toggle('on',s.id===id));if(id!=='play'&&P){P.abort=true;if(P.demo){P.demoStop=true;demoLayer(false)}}}
 function toast(msg){const t=$('#toast');t.textContent=msg;t.hidden=false;t.classList.remove('show');void t.offsetWidth;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2400)}
 function warn(msg){SFX.err();toast(msg)}
+function warnSay(id){SFX.err();if($('#say')&&P&&!P.demo)say(VOICE[id],id);else toast(VOICE[id])}
 function sheet(html,dismiss){$('#sheet').innerHTML=html;$('#ov').hidden=false;$('#ov').dataset.dismiss=dismiss?'1':'';$('#sheet').scrollTop=0}
 function closeSheet(){$('#ov').hidden=true;$('#sheet').innerHTML=''}
 
@@ -1029,7 +1054,7 @@ function renderMap(){
   $('#worlds').innerHTML=`<div class="specials"><button class="sp" data-sp="stickers"><span class="sp-ico">${A.star()}</span><span><b>${tx('สมุดสติกเกอร์','Sticker Book')}</b><small>${tx(`สะสมได้ ${gotStk} จาก ${STK.length} ดวง`,`${gotStk} of ${STK.length} collected`)}</small></span></button><button class="sp" data-sp="make"><span class="sp-ico">${A.wall(1)}</span><span><b>${tx('สร้างด่านเอง','Make a Level')}</b><small>${tx('แล้วส่งลิงก์ให้เพื่อนเล่น','and send it to a friend')}</small></span></button></div>`+WORLDS.map((w,wi)=>{
     const lv=ALL.filter(l=>l.wi===wi),open=unlocked(lv[0]),got=lv.reduce((s,l)=>s+(S.best[l.id]||0),0);
     return `<div class="world ${open?'':'locked'}" style="--wc:${WORLD_TILE[w.n][2]};--wt:${WORLD_TILE[w.n][1]}"><div class="w-head"><div class="w-ico">${art('wall'+w.n,()=>A.wall(w.n))}</div><div class="w-txt"><div class="w-name">${w.n}. ${w.name}</div><div class="w-idea">${w.idea}, ${tx(w.age+' ขวบ','ages '+w.age)}</div></div><div class="w-stars">${ICON.star}${got}/${lv.length*3}</div>${open?`<button class="w-demo" data-demo="d${w.n}" aria-label="${tx('ดูตัวอย่างโลก'+w.name,'Watch how to play '+w.name)}">${ICON.play}<span>${tx('ตัวอย่าง','Watch')}</span></button>`:''}</div>
-      <div class="w-lvls">${lv.map(l=>{const u=unlocked(l),b=S.best[l.id]||0,fresh=u&&!done(l.id)&&l.idx<maxDone();return `<button class="lv ${u?'':'lock'} ${b?'done':''} ${fresh?'fresh':''}" data-lv="${l.idx}" ${u?'':'disabled'} aria-label="${tx('ด่าน '+l.id+(u?'':' ล็อกอยู่'),'Level '+l.id+(u?'':', locked'))}"><span class="lv-n">${u?l.li+1:ICON.lock}</span><span class="lv-s">${[1,2,3].map(i=>`<i class="${i<=b?'on':''}"></i>`).join('')}</span></button>`}).join('')}</div></div>`;
+      <div class="w-lvls">${lv.map(l=>{const u=unlocked(l),b=S.best[l.id]||0,fresh=u&&!done(l.id)&&l.idx<maxDone();return `<button class="lv ${u?'':'lock'} ${b?'done':''} ${fresh?'fresh':''} ${!b&&S.skip[l.id]?'skipped':''}" data-lv="${l.idx}" ${u?'':'disabled'} aria-label="${tx('ด่าน '+l.id+(u?'':' ล็อกอยู่'),'Level '+l.id+(u?'':', locked'))}"><span class="lv-n">${u?l.li+1:ICON.lock}</span><span class="lv-s">${[1,2,3].map(i=>`<i class="${i<=b?'on':''}"></i>`).join('')}</span></button>`}).join('')}</div></div>`;
   }).join('');
   const cur=nextLv();
   if(cur)requestAnimationFrame(()=>{const el=$(`.lv[data-lv="${cur.idx}"]`);if(el){el.classList.add('next');el.scrollIntoView({block:'nearest',behavior:'smooth'})}});
@@ -1073,7 +1098,9 @@ function layout(){
   if(innerHeight>innerWidth){
     const W=stage.clientWidth||innerWidth-16,cell=Math.min(84,Math.floor((W-16)/m.w));
     const need=$('#play .hud').offsetHeight+$('#say').offsetHeight+cell*m.h+36;
-    stage.style.flexBasis=Math.min(need,Math.round(innerHeight*.55))+'px';
+    /* ด่านที่มีแถวประกาย/วงทำซ้ำ ต้องใช้ที่แผงการ์ดมากขึ้น: กระดานได้น้อยลง */
+    const cap=P.lv.cards.includes('F')?.42:P.lv.cards.includes('loop')?.5:.55;
+    stage.style.flexBasis=Math.min(need,Math.round(innerHeight*cap))+'px';
   }else stage.style.flexBasis='';
   const r=$('#boardWrap').getBoundingClientRect();
   const c=Math.max(30,Math.min(104,Math.floor(Math.min((r.width-16)/m.w,(r.height-20)/m.h))));
@@ -1115,7 +1142,7 @@ function renderEnts(){
   $('#ents').innerHTML=h;
 }
 function renderHud(){
-  const lv=P.lv,title=lv.custom==='demo'?tx('ตัวอย่าง','Demo'):lv.custom==='test'?tx('ทดลองเล่น','Test Play'):lv.custom?tx('ด่านของ'+esc(lv.by||'เพื่อน'),lv.by?esc(lv.by)+'’s level':'Friend’s level'):tx('ด่าน ','Level ')+lv.id;
+  const lv=P.lv,title=lv.custom==='demo'?tx('ตัวอย่าง','Demo'):lv.custom==='test'?tx('ทดลองเล่น','Test Play'):lv.custom?tx('ด่านของ'+esc(lv.by||'เพื่อน'),lv.by?esc(lv.by)+'’s level':'Friend’s level'):`<i class="lv-w">${tx('ด่าน','Level')} </i>${lv.id}`;
   $('#lvName').innerHTML=`<b>${title}</b><span>${lv.w.name}</span>`;
   $('#btnHint').hidden=P.fails<2;updateGoal();renderSpeed();
 }
@@ -1180,12 +1207,12 @@ function addCard(t){
   if(P.lv.kind==='step'){if(P.running){if(P.queue.length<3)P.queue.push(t);return}return stepAdd(t)}
   if(P.running)return;
   if(P.sel){const L=locate(P.sel);P.sel=null;
-    if(L&&L.nd.t!=='loop'&&t!=='loop'){if(t==='F'&&L.s==='fn'){renderProg();return warn(tx('ในคาถาของฉันใช้การ์ดประกายไม่ได้นะ','The sparkle card can’t go inside your own spell.'))}
+    if(L&&L.nd.t!=='loop'&&t!=='loop'){if(t==='F'&&L.s==='fn'){renderProg();return warnSay('no_fn_in_fn')}
       snap();L.nd.t=t;SFX.tap();afterEdit(L.nd.id);return}}
   const tg=P.target;
-  if(t==='loop'&&tg.loop){renderProg();return warn(tx('วางวงซ้อนในวงไม่ได้นะ','You can’t put a loop inside a loop.'))}
-  if(t==='F'&&tg.s==='fn'){renderProg();return warn(tx('ในคาถาของฉันใช้การ์ดประกายไม่ได้นะ','The sparkle card can’t go inside your own spell.'))}
-  if(countProg(P.prog)>=40){renderProg();return warn(P.lv.cards.includes('loop')?tx('การ์ดเยอะเกินไปแล้ว ลองใช้ทำซ้ำดูนะ','Too many cards! Try the repeat card.'):tx('การ์ดเยอะเกินไปแล้ว ลองเริ่มใหม่นะ','Too many cards! Try starting again.'))}
+  if(t==='loop'&&tg.loop){renderProg();return warnSay('no_nest')}
+  if(t==='F'&&tg.s==='fn'){renderProg();return warnSay('no_fn_in_fn')}
+  if(countProg(P.prog)>=40){renderProg();return warnSay(P.lv.cards.includes('loop')?'too_many':'too_many2')}
   snap();
   const nd={id:'n'+(++P.uid),t};if(t==='loop'){nd.n=2;nd.body=[]}
   targetList().push(nd);if(t==='loop')P.target={s:tg.s,loop:nd.id};
@@ -1196,7 +1223,7 @@ function undo(){
   if(!P||P.running||P.won)return;
   if(P.lv.kind==='step'){if(!P.prog.main.length)return;P.prog.main.pop();const tr=trace(P.m,P.prog,[...P.m.stars]);moveHeroTo(tr.end);renderProg();return}
   if(P.sel){const L=locate(P.sel);if(L){snap();L.list.splice(L.i,1);if(P.target.loop===L.nd.id)P.target={s:L.s,loop:null}}P.sel=null;SFX.tap();afterEdit();return}
-  if(!P.hist.length){toast(tx('ย้อนต่อไม่ได้แล้ว','Nothing more to undo'));return}
+  if(!P.hist.length){warnSay('no_undo');return}
   restore(P.hist.pop());SFX.tap();afterEdit();
 }
 function clearAll(){
@@ -1293,11 +1320,13 @@ function onFail(r){
   const rnd=P.m.rand.length>0;let id;
   if(r.r==='bump')id=r.out?'bump_out':'bump';
   else if(r.r==='nostar')id=rnd&&!hasType(P.prog.main,'I')&&!hasType(P.prog.fn,'I')?'nostar_rand':'nostar';
-  else if(r.r==='stars_left')id=rnd?'stars_left_rand':'stars_left';
-  else id='not_reached';
+  else if(r.r==='stars_left'){id=rnd?'stars_left_rand':'stars_left';
+    /* เดินถึงน้องหมาแต่ดาวยังไม่ครบ: ขยับตัวเราไปข้าง ๆ ให้เห็นน้องหมา จะได้ไม่ดูเหมือนชนะแล้ว */
+    const hh=$('#hero');if(hh&&P.hero.x===P.m.cat.x&&P.hero.y===P.m.cat.y)hh.classList.add('beside')}
+  else id=hasType(P.prog.main,'loop')||hasType(P.prog.fn,'loop')?'not_reached_loop':'not_reached';
   say(VOICE[id],id,4600);if(P.fails>=2)showHintBtn();
 }
-function showHintBtn(){const b=$('#btnHint');if(!b.hidden)return;b.hidden=false;if(!P.hintSaid){P.hintSaid=true;setTimeout(()=>{if(P&&!P.running)say(VOICE.hint,'hint')},2600)}}
+function showHintBtn(){const b=$('#btnHint');if(!b.hidden)return;b.hidden=false;if(!P.hintSaid){P.hintSaid=true;const me=P;let n=0;const go=()=>{if(P!==me||me.running)return;if(voiceBusy()&&n++<12)return setTimeout(go,400);say(VOICE.hint,'hint')};setTimeout(go,2600)}}
 
 async function finishWin(){
   if(!P||P.won)return;P.won=true;P.dots=null;const lv=P.lv;if(!lv.custom)delete S.drafts[lv.id];
@@ -1334,7 +1363,7 @@ function openWorldDone(w){
 }
 function openEnding(){
   const show_=()=>{sheet(`<div class="ending">${IMG.family?`<img class="end-family" src="${IMG.family.src}" alt="">`:`<div class="end-art"><div>${art('wizard',A.wizard)}</div><div>${heroArt()}</div><div>${art('princess',A.princess)}</div><div>${petArt()}</div></div>`}
-    <div class="win-title">${tx('เธอคือนักเวทโค้ดดิ้งตัวจริง!','You are a real coding wizard!')}</div><p class="p">${tx(`ผ่านครบ 8 โลก ได้ ${totalStars()} จาก ${ALL.length*3} ดาว`,`You finished all 8 worlds and got ${totalStars()} of ${ALL.length*3} stars.`)}</p><p class="small">${tx('กลับไปเก็บ 3 ดาวให้ครบทุกด่านได้นะ','You can go back and get 3 stars on every level.')}</p>
+    <div class="win-title">${tx('เธอคือนักเวทโค้ดดิ้งตัวจริง!','You are a real coding wizard!')}</div><p class="p">${tx(`ผ่านครบ 8 โลก ได้ ${totalStars()} จาก ${ALL.length*3} ดาว`,`You finished all 8 worlds and got ${totalStars()} of ${ALL.length*3} stars.`)}</p><p class="small">${totalStars()>=ALL.length*3?tx('ได้ครบทุกดาวแล้ว เก่งที่สุดเลย','You got every star. Amazing!'):tx('กลับไปเก็บ 3 ดาวให้ครบทุกด่านได้นะ','You can go back and get 3 stars on every level.')}</p>
     <div class="row"><button class="btn-gold" data-act="map">${tx('กลับแผนที่','Back to map')}</button></div></div>`);speak('ending')};
   tryVideo(vidOf('ending'),show_);
 }
@@ -1346,20 +1375,31 @@ function openHint(){
   if(!lv.solP){sheet(`<div class="hint"><div class="win-title small">${tx('คำใบ้จากพ่อมด','A hint from the wizard')}</div><p class="p">${tx('ด่านนี้ยังไม่มีเฉลย ลองทีละการ์ด แล้วดูว่าตัวละครเดินไปทางไหนนะ','This level has no answer yet. Try one card at a time and watch where you go.')}</p><div class="row end"><button class="btn-gold" data-act="close">${tx('โอเค','OK')}</button></div></div>`,true);return}
   const cfg=[...P.m.stars,...P.m.rand],t=trace(P.m,lv.solP,cfg),ck=P.m.cat.x+','+P.m.cat.y;
   if(lv.kind!=='step')resetRunView();
-  P.dots=[...new Set(t.ev.filter(e=>e.k==='move').map(e=>e.x+','+e.y))].filter(k=>k!==ck);renderEnts();
+  /* โลก 1 (เดินทันที): จุดทองเริ่มจากที่ตัวเรายืนอยู่ตอนนี้ ไม่ใช่จุดเริ่มด่าน */
+  if(lv.kind==='step'){const h0=P.hero||P.m.hero,d=bfsDist(P.m,ck),path=[];let cur=h0.x+','+h0.y;
+    while(d.has(cur)&&d.get(cur)>0){const[x,y]=cur.split(',').map(Number);let nx=null;for(const mv in MOVES){const nk=(x+MOVES[mv][0])+','+(y+MOVES[mv][1]);if(d.get(nk)===d.get(cur)-1){nx=nk;break}}if(!nx)break;path.push(nx);cur=nx}
+    P.dots=path.filter(k=>k!==ck)}
+  else P.dots=[...new Set(t.ev.filter(e=>e.k==='move').map(e=>e.x+','+e.y))].filter(k=>k!==ck);
+  renderEnts();
   let h=`<div class="hint"><div class="win-title small">${tx('คำใบ้จากพ่อมด','A hint from the wizard')}</div><p class="p">${tx('เดินตามจุดสีทองบนกระดานนะ','Follow the gold dots on the board.')}</p>`;
   if(lv.kind!=='step'){
     if(stage===3)h+=`<p class="p">${tx('นี่คือคาถาที่ใช้ได้','Here is a spell that works.')}</p>${ghost(lv.solP,false)}`;
-    else if(stage===2)h+=`<p class="p">${tx('ลองเริ่มด้วยการ์ดพวกนี้','Try starting with these cards.')}</p>${ghost(lv.solP,true)}<p class="small">${tx(`ถ้ายังไม่ได้ ลองอีก ${5-f} ครั้ง พ่อมดจะให้ดูคาถาทั้งหมด`,`Still stuck? Try ${5-f} more times and the wizard will show the whole spell.`)}</p>`;
-    else h+=`<p class="small">${tx(`ถ้ายังไม่ได้ ลองอีก ${3-f} ครั้ง พ่อมดจะช่วยวางการ์ดให้ดู`,`Still stuck? Try ${3-f} more times and the wizard will show you some cards.`)}</p>`;
+    else if(stage===2)h+=`<p class="p">${tx('ลองเริ่มด้วยการ์ดพวกนี้','Try starting with these cards.')}</p>${ghost(lv.solP,true)}<p class="small">${tx(`ถ้ายังไม่ได้ ลองอีก ${5-f} ครั้ง พ่อมดจะให้ดูคาถาทั้งหมด`,`Still stuck? Try ${moreTimes(5-f)} and the wizard will show the whole spell.`)}</p>`;
+    else h+=`<p class="small">${tx(`ถ้ายังไม่ได้ ลองอีก ${3-f} ครั้ง พ่อมดจะช่วยวางการ์ดให้ดู`,`Still stuck? Try ${moreTimes(3-f)} and the wizard will show you some cards.`)}</p>`;
   }
   h+=`<div class="row end">${!lv.custom?`<button class="btn-soft" data-act="demo">${ICON.play}${tx('ดูตัวอย่าง','Watch demo')}</button>`:''}${!lv.custom&&f>=5&&!done(lv.id)&&ALL[lv.idx+1]?`<button class="btn-soft" data-act="skip">${tx('ข้ามไปก่อน','Skip for now')}</button>`:''}<button class="btn-gold" data-act="close">${tx('โอเค','OK')}</button></div></div>`;
   sheet(h,true);
 }
-function ghostList(list){return list.map(n=>n.t==='loop'?`<span class="g-loop"><span class="g-n">×${n.n}</span>${ghostList(n.body)}</span>`:`<span class="card k-${n.t}">${CARDS[n.t].icon}</span>`).join('')}
+const moreTimes=n=>n===1?'1 more time':n+' more times';
+function ghostList(list){return list.map(n=>n.t==='loop'?`<span class="g-loop"><span class="g-n">×${n.n}</span>${ghostList(n.body)}${n.part?'<span class="g-more">…</span>':''}</span>`:`<span class="card k-${n.t}">${CARDS[n.t].icon}</span>`).join('')}
 function ghost(prog,half){
-  let main=prog.main;if(half)main=main.slice(0,Math.max(1,Math.ceil(main.length/2)));
-  let h=`<div class="g-row"><b>${tx('คาถา','Spell')}</b>${ghostList(main)}${half&&main.length<prog.main.length?'<span class="g-more">…</span>':''}</div>`;
+  let main=prog.main,more=false;
+  if(half){
+    if(main.length>1){main=main.slice(0,Math.ceil(main.length/2));more=main.length<prog.main.length}
+    /* เฉลยเป็นวงเดียว: แสดงวงกับการ์ดข้างในครึ่งเดียว ไม่ให้เห็นทั้งหมด */
+    else if(main.length===1&&main[0].t==='loop'){const L=main[0];main=[{t:'loop',n:L.n,body:L.body.length>1?L.body.slice(0,Math.ceil(L.body.length/2)):[],part:true}]}
+  }
+  let h=`<div class="g-row"><b>${tx('คาถา','Spell')}</b>${ghostList(main)}${more?'<span class="g-more">…</span>':''}</div>`;
   if(!half&&prog.fn.length)h=`<div class="g-row"><b>${tx('คาถาของฉัน','My spell')}</b>${ghostList(prog.fn)}</div>`+h;
   return h;
 }
@@ -1450,7 +1490,7 @@ async function fingerTap(el,me){
 }
 function demoLayer(on){$('#demoLayer').hidden=!on;const f=$('#finger');if(!on)f.classList.remove('show','press');else f.style.transform=`translate(${innerWidth/2}px,${innerHeight*.7}px)`}
 let demoSkipTo=null;
-async function runDemo(key,back,skipTo){
+async function runDemo(key,back,skipTo,noStart){
   const D=DEMOS[key];if(!D)return back&&back();const w=WORLDS[D.w-1];demoBack=back;demoSkipTo=skipTo||back;
   const lv={custom:'demo',id:'demo',by:'',map:D.map,m:parseMap(D.map),w,wi:D.w-1,li:-1,idx:-1,cards:D.cards||w.cards,par:null,solP:null,start:D.start||null};
   lv.kind=w.step?'step':lv.start?'debug':lv.m.rand.length?'random':lv.m.stars.size?'collect':'go';
@@ -1458,6 +1498,7 @@ async function runDemo(key,back,skipTo){
   demoLayer(true);await sleep(800);
   for(const [k,v] of D.steps){
     if(P!==me||me.demoStop)return;
+    if(noStart&&k==='say'&&v==='d_start')continue;
     if(k==='say'){say(VOICE[v],null);await speakWait(v)}
     else if(k==='tap')await fingerTap($(`#palette [data-add="${v}"]`),me);
     else if(k==='el')await fingerTap($(v),me);
@@ -1479,7 +1520,7 @@ function openDemoEnd(key){
 function openNewThing(lv){
   S.seen[lv.demo]=1;save();
   sheet(`<div class="intro"><div class="intro-face">${art('wizard',A.wizard)}</div><div class="intro-body"><div class="intro-world">${tx('ด่าน ','Level ')}${lv.id}</div><div class="intro-idea">${tx('ด่านนี้มีของใหม่','Something new in this level!')}</div><p class="p">${VOICE.d_start}</p>
-    <div class="row end"><button class="btn-soft" data-act="close">${tx('เล่นเลย','Play now')}</button><button class="btn-gold" data-act="demo" data-k="${lv.demo}">${ICON.play}${tx('ดูพ่อมดทำให้ดู','Watch the wizard')}</button></div></div></div>`,true);
+    <div class="row end"><button class="btn-soft" data-act="close">${tx('เล่นเลย','Play now')}</button><button class="btn-gold" data-act="demo" data-k="${lv.demo}" data-from="new">${ICON.play}${tx('ดูพ่อมดทำให้ดู','Watch the wizard')}</button></div></div></div>`,true);
   speak('d_start');
 }
 function copyText(t,msg){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast(msg),()=>window.prompt(tx('คัดลอกข้อความนี้','Copy this text'),t))}
@@ -1548,7 +1589,7 @@ function act(a,el){
     case 'reset':if(window.confirm(tx('ล้างดาวและด่านที่ผ่านทั้งหมด?','Clear all stars and finished levels?'))){S.best={};S.skip={};S.seen={};S.tries={};S.stat={};S.drafts={};S.stickers={};S.flags={};S.friend={};save();toast(tx('ล้างแล้ว','Cleared'));openParent();renderHome()}break;
     case 'make':closeSheet();openEditor();break;
     case 'demo':{const lv=P&&P.lv;if(!lv||lv.custom)break;const k=el.dataset.k||demoFor(lv),keep={fails:P.fails,hintSaid:P.hintSaid};closeSheet();stopVoice();
-      runDemo(k,()=>{playLevel(lv);if(P&&P.lv===lv){P.fails=keep.fails;P.hintSaid=keep.hintSaid;renderHud()}});break}
+      runDemo(k,()=>{playLevel(lv);if(P&&P.lv===lv){P.fails=keep.fails;P.hintSaid=keep.hintSaid;renderHud()}},null,el.dataset.from==='new');break}
     case 'demoagain':closeSheet();runDemo(el.dataset.k,demoBack,demoSkipTo);break;
     case 'demoplay':{closeSheet();const b=demoBack;demoBack=demoSkipTo=null;b?b():(show('map'),renderMap());break}
     case 'parent':openParent();break;
@@ -1570,8 +1611,8 @@ function act(a,el){
 const lvOf=w=>ALL.filter(l=>l.w===w);
 const STK=[
   {id:'first',get name(){return tx('ก้าวแรก','First Step')},get how(){return tx('ผ่านด่าน 1-1','Pass level 1-1')},ok:()=>(S.best['1-1']||0)>0,art:()=>heroArt(),bg:'#EAF5DA'},
-  ...WORLDS.map(w=>({id:'w'+w.n,get name(){return tx('ผ่าน'+w.name,w.name+' cleared')},get how(){return tx('ผ่านทุกด่านในโลก '+w.n,'Pass every level in world '+w.n)},ok:()=>lvOf(w).every(l=>(S.best[l.id]||0)>0),art:()=>art('wall'+w.n,()=>A.wall(w.n)),bg:WORLD_TILE[w.n][1]})),
-  ...WORLDS.map(w=>({id:'g'+w.n,get name(){return tx('3 ดาว'+w.name,w.name+' 3 stars')},get how(){return tx('ได้ 3 ดาวทุกด่านในโลก '+w.n,'Get 3 stars on every level in world '+w.n)},gold:true,ok:()=>lvOf(w).every(l=>S.best[l.id]===3),art:()=>art('wall'+w.n,()=>A.wall(w.n)),bg:WORLD_TILE[w.n][0]})),
+  ...WORLDS.map(w=>({id:'w'+w.n,get name(){return tx('ผ่าน'+w.name,w.name+' cleared')},get how(){return tx('ผ่านทุกด่านในโลก\u00a0'+w.n,'Pass every level in world\u00a0'+w.n)},ok:()=>lvOf(w).every(l=>(S.best[l.id]||0)>0),art:()=>art('wall'+w.n,()=>A.wall(w.n)),bg:WORLD_TILE[w.n][1]})),
+  ...WORLDS.map(w=>({id:'g'+w.n,get name(){return tx('3 ดาว'+w.name,w.name+' 3 stars')},get how(){return tx('ได้ 3 ดาวทุกด่านในโลก\u00a0'+w.n,'Get 3 stars on every level in world\u00a0'+w.n)},gold:true,ok:()=>lvOf(w).every(l=>S.best[l.id]===3),art:()=>art('wall'+w.n,()=>A.wall(w.n)),bg:WORLD_TILE[w.n][0]})),
   {id:'s50',get name(){return tx('ดาว 50 ดวง','50 Stars')},get how(){return tx('สะสมดาวให้ได้ 50 ดวง','Collect 50 stars')},ok:()=>totalStars()>=50,art:()=>`<div class="stk-num">${A.star()}<b>50</b></div>`,bg:'#FFF3D6'},
   {id:'s100',get name(){return tx('ดาว 100 ดวง','100 Stars')},get how(){return tx('สะสมดาวให้ได้ 100 ดวง','Collect 100 stars')},gold:true,ok:()=>totalStars()>=100,art:()=>`<div class="stk-num">${A.star()}<b>100</b></div>`,bg:'#FFF3D6'},
   {id:'all',get name(){return tx('นักเวทเต็มขั้น','Master Wizard')},get how(){return tx('ได้ 3 ดาวครบทุกด่าน','Get 3 stars on every level')},gold:true,ok:()=>totalStars()===ALL.length*3,art:()=>art('wizard',A.wizard),bg:'#ECE8F8'},
@@ -1711,7 +1752,7 @@ function miniMap(dd){return `<div class="mine-mini" style="grid-template-columns
 function openMine(){
   if(!S.mine.length)return edWarn('ed_none');
   sheet(`<div class="mine"><div class="win-title small">${tx('ด่านของฉัน','My levels')}</div>${S.mine.map((d,i)=>{const dd=decodeLevel(d.code);if(!dd)return '';const best=S.friend[d.code]||0;
-    return `<div class="mine-row">${miniMap(dd)}<div class="mine-txt"><b>${WORLDS[dd.theme-1].name} ${dd.w}×${dd.h}</b><span>${tx(`เป้า 3 ดาว ${dd.par} ใบ`,`3 stars: ${dd.par} cards`)}${best?tx(`, ได้ ${best} ดาว`,`, you got ${best}`):''}</span></div><button class="ctl sm" data-act="mine-play" data-i="${i}" aria-label="${tx('เล่นด่านนี้','Play this level')}">${ICON.play}</button><button class="ctl sm" data-act="mine-share" data-i="${i}" aria-label="${tx('แชร์ด่านนี้','Share this level')}">${ICON.share}</button><button class="ctl sm" data-act="mine-edit" data-i="${i}" aria-label="${tx('แก้ด่านนี้','Edit this level')}">${ICON.pen}</button><button class="ctl sm" data-act="mine-del" data-i="${i}" aria-label="${tx('ลบด่านนี้','Delete this level')}">${ICON.trash}</button></div>`}).join('')}
+    return `<div class="mine-row">${miniMap(dd)}<div class="mine-txt"><b>${WORLDS[dd.theme-1].name} ${dd.w}×${dd.h}</b><span>${tx(`เป้า 3 ดาว ${dd.par} ใบ`,`3 stars: ${dd.par} cards`)}${best?tx(`, ได้ ${best} ดาว`,`, you got ${best}`):''}</span></div><div class="mine-btns"><button class="ctl sm" data-act="mine-play" data-i="${i}" aria-label="${tx('เล่นด่านนี้','Play this level')}">${ICON.play}</button><button class="ctl sm" data-act="mine-share" data-i="${i}" aria-label="${tx('แชร์ด่านนี้','Share this level')}">${ICON.share}</button><button class="ctl sm" data-act="mine-edit" data-i="${i}" aria-label="${tx('แก้ด่านนี้','Edit this level')}">${ICON.pen}</button><button class="ctl sm" data-act="mine-del" data-i="${i}" aria-label="${tx('ลบด่านนี้','Delete this level')}">${ICON.trash}</button></div></div>`}).join('')}
     <div class="row end"><button class="btn-gold" data-act="close">${tx('ปิด','Close')}</button></div></div>`,true);
 }
 function openEdHelp(){
@@ -1773,7 +1814,7 @@ $('#demoSkip').onclick=()=>{const b=demoSkipTo||demoBack;demoBack=demoSkipTo=nul
 $('#btnSpeed').onclick=()=>{S.fast=!S.fast;save();renderSpeed();toast(S.fast?tx('เดินเร็ว (กระต่าย)','Fast (rabbit)'):tx('เดินช้า (เต่า)','Slow (turtle)'))};
 $('#say').onclick=()=>{ac();if(say.cur)speak(say.cur)};
 $('#mapHome').onclick=()=>{show('home');renderHome()};
-$('#worlds').addEventListener('click',e=>{const dm=e.target.closest('[data-demo]');if(dm){SFX.tap();ac();const wi=+dm.dataset.demo.slice(1)-1,toMap=()=>{show('map');renderMap()};runDemo(dm.dataset.demo,()=>{const l=ALL.find(x=>x.wi===wi&&!done(x.id))||ALL.find(x=>x.wi===wi);startLevel(l.idx)},toMap);return}
+$('#worlds').addEventListener('click',e=>{const dm=e.target.closest('[data-demo]');if(dm){SFX.tap();ac();const wi=+dm.dataset.demo.slice(1)-1,toMap=()=>{show('map');renderMap()};runDemo(dm.dataset.demo,()=>{const l=ALL.find(x=>x.wi===wi&&!done(x.id))||ALL.find(x=>x.wi===wi);S.seen['w'+(wi+1)]=1;save();startLevel(l.idx)},toMap);return}
   const sp=e.target.closest('[data-sp]');if(sp){SFX.tap();sp.dataset.sp==='make'?openEditor():openStickers();return}
   const b=e.target.closest('[data-lv]');if(b&&!b.disabled){SFX.tap();startLevel(+b.dataset.lv)}});
 let welcomed=false;
