@@ -288,6 +288,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .wd-art,.end-art{display:flex;justify-content:center;align-items:flex-end;gap:4%;margin:0 auto 6px;max-width:420px}
 .wd-art>div,.end-art>div{width:30%}
 .wd-art .wd-star{width:22%;animation:float 2.4s ease-in-out infinite}
+.end-family{display:block;width:100%;max-width:520px;margin:0 auto 10px;border-radius:18px;box-shadow:0 6px 18px rgba(80,60,140,.18)}
 .gate input{width:140px;height:56px;border-radius:16px;border:3px solid var(--purple-l);font:inherit;font-size:28px;text-align:center;background:#fff;color:var(--ink);-webkit-user-select:text;user-select:text}
 .gate input.err{border-color:var(--peach);animation:shake .4s}
 .parent{text-align:left}
@@ -502,7 +503,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
    ไฟล์เดียว ใช้กับ GitHub Pages + ติดตั้งเป็นแอป (PWA)
    ใส่ภาพ/เสียง/วิดีโอเองได้: วางไฟล์ตามชื่อใน ASSETS / VOICE
    ========================================================= */
-const VERSION='2.1.3';
+const VERSION='2.1.4';
 
 /*ENGINE_START*/
 const MOVES={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]};
@@ -691,7 +692,7 @@ WORLDS.forEach(w=>{const th={name:w.name,idea:w.idea};
 
 /* ---------- ไฟล์ภาพ/เสียง/วิดีโอที่ใส่เพิ่มได้ (ไม่มีไฟล์ก็เล่นได้ ใช้ภาพในตัว) ---------- */
 const ASSETS={hero_girl:'img/hero-girl.png',hero_boy:'img/hero-boy.png',dog_kim:'img/dog-kim.png',dog_dukdik:'img/dog-dukdik.png',star:'img/star.png',
-  wizard:'img/wizard.png',princess:'img/princess.png',title:'img/title.jpg',title_en:'img/title.jpg'}; /* ภาพหน้าแรกไม่มีตัวหนังสือ ใช้ไฟล์เดียวทั้งสองภาษา (ถ้าวันหลังมีตัวหนังสือไทย ให้ตั้ง title_en เป็นไฟล์แยก) */
+  wizard:'img/wizard.png',princess:'img/princess.png',title:'img/title.jpg',title_en:'img/title.jpg',family:'img/family.jpg'}; /* ภาพหน้าแรกไม่มีตัวหนังสือ ใช้ไฟล์เดียวทั้งสองภาษา (ถ้าวันหลังมีตัวหนังสือไทย ให้ตั้ง title_en เป็นไฟล์แยก) */
 for(let i=1;i<=8;i++){ASSETS['wall'+i]='img/wall-'+i+'.png';ASSETS['tile'+i]='img/tile-'+i+'.png'}
 const VIDEO={intro:'video/intro.mp4',ending:'video/ending.mp4',intro_en:'video/intro.mp4',ending_en:'video/ending.mp4'}; /* คลิปไม่มีตัวหนังสือและไม่มีคนพูด ใช้ไฟล์เดียวทั้งสองภาษา */
 /* ภาพหัวเกม/วิดีโอที่มีตัวหนังสือ: โหมดอังกฤษใช้ไฟล์ -en ของตัวเอง (ไม่มีก็ใช้ภาพในตัว/ข้ามวิดีโอ) */
@@ -1332,7 +1333,7 @@ function openWorldDone(w){
   speak('world_done');
 }
 function openEnding(){
-  const show_=()=>{sheet(`<div class="ending"><div class="end-art"><div>${art('wizard',A.wizard)}</div><div>${heroArt()}</div><div>${art('princess',A.princess)}</div><div>${petArt()}</div></div>
+  const show_=()=>{sheet(`<div class="ending">${IMG.family?`<img class="end-family" src="${IMG.family.src}" alt="">`:`<div class="end-art"><div>${art('wizard',A.wizard)}</div><div>${heroArt()}</div><div>${art('princess',A.princess)}</div><div>${petArt()}</div></div>`}
     <div class="win-title">${tx('เธอคือนักเวทโค้ดดิ้งตัวจริง!','You are a real coding wizard!')}</div><p class="p">${tx(`ผ่านครบ 8 โลก ได้ ${totalStars()} จาก ${ALL.length*3} ดาว`,`You finished all 8 worlds and got ${totalStars()} of ${ALL.length*3} stars.`)}</p><p class="small">${tx('กลับไปเก็บ 3 ดาวให้ครบทุกด่านได้นะ','You can go back and get 3 stars on every level.')}</p>
     <div class="row"><button class="btn-gold" data-act="map">${tx('กลับแผนที่','Back to map')}</button></div></div>`);speak('ending')};
   tryVideo(vidOf('ending'),show_);
