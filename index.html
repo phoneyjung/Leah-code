@@ -344,6 +344,10 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .stk{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;transform:rotate(var(--r,0deg))}
 .stk-art{width:80px;height:80px;border-radius:50%;background:var(--bg);border:5px solid #fff;box-shadow:0 4px 10px #3d2c5a33;padding:9px;overflow:hidden}
 .stk-art svg,.stk-art img{width:100%;height:100%}
+/* ภาพจริงจาก GPT/PixelLab: ให้พอดีกรอบเหมือนภาพ SVG ในตัว */
+.wd-art img,.end-art img,.a-wiz img,.a-hero img,.a-cat img{display:block;width:100%;height:auto}
+.w-ico img{display:block;width:100%;height:100%;object-fit:contain}
+.say-face img,.intro-face img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 22%;transform:scale(1.18);transform-origin:50% 40%}
 .stk.gold .stk-art{border-color:var(--gold)}
 .stk-badge{position:absolute;top:-6px;left:calc(50% + 22px);width:30px;height:30px}
 .stk-name{font-size:13px;line-height:1.2;text-align:center;color:var(--ink)}
@@ -498,7 +502,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
    ไฟล์เดียว ใช้กับ GitHub Pages + ติดตั้งเป็นแอป (PWA)
    ใส่ภาพ/เสียง/วิดีโอเองได้: วางไฟล์ตามชื่อใน ASSETS / VOICE
    ========================================================= */
-const VERSION='2.1.0';
+const VERSION='2.1.1';
 
 /*ENGINE_START*/
 const MOVES={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]};
@@ -687,7 +691,7 @@ WORLDS.forEach(w=>{const th={name:w.name,idea:w.idea};
 
 /* ---------- ไฟล์ภาพ/เสียง/วิดีโอที่ใส่เพิ่มได้ (ไม่มีไฟล์ก็เล่นได้ ใช้ภาพในตัว) ---------- */
 const ASSETS={hero_girl:'img/hero-girl.png',hero_boy:'img/hero-boy.png',dog_kim:'img/dog-kim.png',dog_dukdik:'img/dog-dukdik.png',star:'img/star.png',
-  wizard:'img/wizard.png',princess:'img/princess.png',title:'img/title.png',title_en:'img/title-en.png'};
+  wizard:'img/wizard.png',princess:'img/princess.png',title:'img/title.jpg',title_en:'img/title.jpg'}; /* ภาพหน้าแรกไม่มีตัวหนังสือ ใช้ไฟล์เดียวทั้งสองภาษา (ถ้าวันหลังมีตัวหนังสือไทย ให้ตั้ง title_en เป็นไฟล์แยก) */
 for(let i=1;i<=8;i++){ASSETS['wall'+i]='img/wall-'+i+'.png';ASSETS['tile'+i]='img/tile-'+i+'.png'}
 const VIDEO={intro:'video/intro.mp4',ending:'video/ending.mp4',intro_en:'video/intro-en.mp4',ending_en:'video/ending-en.mp4'};
 /* ภาพหัวเกม/วิดีโอที่มีตัวหนังสือ: โหมดอังกฤษใช้ไฟล์ -en ของตัวเอง (ไม่มีก็ใช้ภาพในตัว/ข้ามวิดีโอ) */
@@ -1499,7 +1503,7 @@ function reportText(){
 }
 /* ตรวจว่าอัปไฟล์ภาพ เสียง วิดีโอขึ้นแล้วกี่ไฟล์ */
 async function openAssets(){
-  const groups=[[tx('ภาพ','Pictures'),Object.entries(ASSETS).filter(([k])=>!/^tile/.test(k)).map(([,v])=>v)],[tx('พื้นกระดาน (ไม่บังคับ)','Board tiles (optional)'),Object.entries(ASSETS).filter(([k])=>/^tile/.test(k)).map(([,v])=>v)],[tx('เสียงพากย์ ไทย','Voice – Thai'),VOICE_FILES.map(k=>voiceDir('th')+k+'.mp3')],[tx('เสียงพากย์ English','Voice – English'),VOICE_FILES.map(k=>voiceDir('en')+k+'.mp3')],[tx('วิดีโอ','Videos'),Object.values(VIDEO)]];
+  const groups=[[tx('ภาพ','Pictures'),[...new Set(Object.entries(ASSETS).filter(([k])=>!/^tile/.test(k)).map(([,v])=>v))]],[tx('พื้นกระดาน (ไม่บังคับ)','Board tiles (optional)'),Object.entries(ASSETS).filter(([k])=>/^tile/.test(k)).map(([,v])=>v)],[tx('เสียงพากย์ ไทย','Voice – Thai'),VOICE_FILES.map(k=>voiceDir('th')+k+'.mp3')],[tx('เสียงพากย์ English','Voice – English'),VOICE_FILES.map(k=>voiceDir('en')+k+'.mp3')],[tx('วิดีโอ','Videos'),Object.values(VIDEO)]];
   const back=`<div class="row end"><button class="btn-soft" data-act="parent">${ICON.back}${tx('กลับ','Back')}</button><button class="btn-gold" data-act="assets">${tx('ตรวจอีกครั้ง','Check again')}</button></div>`;
   const offline=()=>sheet(`<div class="parent"><div class="win-title small">${tx('ไฟล์ภาพและเสียง','Picture & sound files')}</div><p class="p">${tx('ต้องต่อเน็ตก่อนถึงจะตรวจได้ ลองต่อ Wi-Fi หรือเน็ตมือถือ แล้วกดตรวจอีกครั้ง','You need the internet to check. Connect to Wi-Fi or mobile data, then tap Check again.')}</p>${back}</div>`,true);
   if(location.protocol==='file:'||navigator.onLine===false)return offline();
