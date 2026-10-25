@@ -117,8 +117,8 @@ svg{display:block}
 html[lang=en] .lv.fresh::after{content:'New'}
 .lv.next{box-shadow:0 0 0 3px var(--gold),0 4px 0 var(--purple-l);animation:breathe 1.8s ease-in-out infinite}
 .lv.lock{opacity:.55;box-shadow:none}
-.lv.skipped{box-shadow:0 0 0 3px var(--gold) inset,0 4px 0 var(--purple-l)}
-.lv.skipped::after{content:'↷';position:absolute;top:2px;right:5px;font-size:13px;color:var(--gold-d,#C98A00);font-weight:700}
+.lv.skipped{background:#fff;outline:2px dashed #A99BC9;outline-offset:-4px;box-shadow:0 4px 0 var(--purple-l)}
+.lv.skipped::after{content:'↷';position:absolute;top:0;right:4px;font-size:17px;color:var(--purple-d);font-weight:700}
 .world.locked{opacity:.75}
 
 /* หน้าเล่น */
@@ -157,6 +157,8 @@ html[lang=en] .lv.fresh::after{content:'New'}
 .ent.star>*{width:74%;height:74%;margin:13%}
 .ent.q>*{width:80%;height:80%;margin:10%}
 .ent.cat{z-index:2}
+.cell img[src$="wall-2.png"]{filter:drop-shadow(0 0 1px #5B4B8A) drop-shadow(0 3px 0 rgba(91,75,138,.35))}
+.ent.dot.on-star{z-index:3}.ent.dot.on-star i{background:var(--purple)!important;box-shadow:0 0 0 3px #fff!important}
 .ent.hero.beside{margin-left:calc(var(--c) * -.34);margin-top:calc(var(--c) * .06)}
 .ent.hero{z-index:3}
 .hb,.hf{width:100%;height:100%}
@@ -180,6 +182,8 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 
 /* แผงการ์ด */
 .prog{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:2px}
+.prog.more{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 30px),rgba(0,0,0,.15));mask-image:linear-gradient(to bottom,#000 calc(100% - 30px),rgba(0,0,0,.15))}
+.prog .s-fn{position:sticky;top:0;z-index:2;background:var(--cream2)}
 .strip{background:var(--cream);border-radius:16px;padding:6px 8px 8px;border:2px solid transparent}
 .strip.cur{border-color:var(--purple-l)}
 .strip.s-fn{background:#F4F0FC}
@@ -512,7 +516,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
    ไฟล์เดียว ใช้กับ GitHub Pages + ติดตั้งเป็นแอป (PWA)
    ใส่ภาพ/เสียง/วิดีโอเองได้: วางไฟล์ตามชื่อใน ASSETS / VOICE
    ========================================================= */
-const VERSION='2.2.0';
+const VERSION='2.2.1';
 
 /*ENGINE_START*/
 const MOVES={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]};
@@ -703,6 +707,7 @@ WORLDS.forEach(w=>{const th={name:w.name,idea:w.idea};
 const ASSETS={hero_girl:'img/hero-girl.png',hero_boy:'img/hero-boy.png',dog_kim:'img/dog-kim.png',dog_dukdik:'img/dog-dukdik.png',star:'img/star.png',
   wizard:'img/wizard.png',princess:'img/princess.png',title:'img/title.jpg',title_en:'img/title.jpg',family:'img/family.jpg'}; /* ภาพหน้าแรกไม่มีตัวหนังสือ ใช้ไฟล์เดียวทั้งสองภาษา (ถ้าวันหลังมีตัวหนังสือไทย ให้ตั้ง title_en เป็นไฟล์แยก) */
 for(let i=1;i<=8;i++){ASSETS['wall'+i]='img/wall-'+i+'.png';ASSETS['tile'+i]='img/tile-'+i+'.png'}
+const USE_TILES=false;
 const VIDEO={intro:'video/intro.mp4',ending:'video/ending.mp4',intro_en:'video/intro.mp4',ending_en:'video/ending.mp4'}; /* คลิปไม่มีตัวหนังสือและไม่มีคนพูด ใช้ไฟล์เดียวทั้งสองภาษา */
 /* ภาพหัวเกม/วิดีโอที่มีตัวหนังสือ: โหมดอังกฤษใช้ไฟล์ -en ของตัวเอง (ไม่มีก็ใช้ภาพในตัว/ข้ามวิดีโอ) */
 const vidOf=k=>VIDEO[isEN()?k+'_en':k];
@@ -924,7 +929,7 @@ const CARDS={
   P:{get name(){return tx('เก็บดาว','Pick up')},icon:sv(`<g fill="currentColor"><rect x="12.5" y="11" width="5.5" height="16" rx="2.75"/><rect x="19" y="7.5" width="5.5" height="19" rx="2.75"/><rect x="25.5" y="8.5" width="5.5" height="18" rx="2.75"/><rect x="32" y="12.5" width="5" height="15" rx="2.5"/><path d="M12.5 24H37.5V30Q37.5 42 26 42Q17 42 13.5 35L8.5 26.5Q7 23.5 9.5 22Q12 20.8 13.5 23.2Z"/></g>`,'0 0 48 48')},
   I:{get name(){return tx('ถ้ามีดาว','If star')},icon:sv(`<path d="M24 5L29.6 16.6L42.3 18.2L33 27L35.4 39.7L24 33.4L12.6 39.7L15 27L5.7 18.2L18.4 16.6Z" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/><path d="M21 21Q21 17.5 24.2 17.5Q27.4 17.5 27.4 20.6Q27.4 22.6 25.4 23.4Q24.3 24 24.3 26" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><circle cx="24.3" cy="30" r="1.8" fill="currentColor"/>`,'0 0 48 48')},
   loop:{get name(){return tx('ทำซ้ำ','Repeat')},icon:sv(`<path d="M37.5 25A13.5 13.5 0 1 1 33.5 15.2" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M36.5 6.5L37.5 18.5L25.5 17Z" fill="currentColor"/>`,'0 0 48 48')},
-  F:{get name(){return tx('คาถาฉัน','Sparkle')},icon:sv(`<path d="M21 4Q23.6 19 37.5 21.5Q23.6 24 21 39Q18.4 24 4.5 21.5Q18.4 19 21 4Z" fill="currentColor"/><path d="M37.5 29Q38.5 35.5 44 36.5Q38.5 37.5 37.5 44Q36.5 37.5 31 36.5Q36.5 35.5 37.5 29Z" fill="currentColor"/>`,'0 0 48 48')}
+  F:{get name(){return tx('ประกาย','Sparkle')},icon:sv(`<path d="M21 4Q23.6 19 37.5 21.5Q23.6 24 21 39Q18.4 24 4.5 21.5Q18.4 19 21 4Z" fill="currentColor"/><path d="M37.5 29Q38.5 35.5 44 36.5Q38.5 37.5 37.5 44Q36.5 37.5 31 36.5Q36.5 35.5 37.5 29Z" fill="currentColor"/>`,'0 0 48 48')}
 };
 const PAL_ORDER=['U','D','L','R','P','I','loop','F'];
 
@@ -990,8 +995,8 @@ const IMG={};
 function probeAssets(){
   if(location.protocol==='file:')return Promise.resolve();
   const load=([k,src])=>new Promise(res=>{const im=new Image();im.onload=()=>{IMG[k]={src,px:im.naturalWidth<=128};res(true)};im.onerror=()=>res(false);im.src=src});
-  /* พื้นกระดาน (ไม่บังคับ): ลองแค่ tile-1 ก่อน มีจริงค่อยโหลดที่เหลือ จะได้ไม่ขอไฟล์ที่ไม่มี 8 ไฟล์ทุกครั้ง */
-  const jobs=Object.entries(ASSETS).filter(([k])=>!/^tile[2-8]$/.test(k)).map(e=>e[0]==='tile1'?load(e).then(ok=>ok&&Promise.all(Object.entries(ASSETS).filter(([k])=>/^tile[2-8]$/.test(k)).map(load))):load(e));
+  /* พื้นกระดาน (ไม่บังคับ): ปิดไว้ ถ้าอัป img/tile-1..8.png แล้วให้เปลี่ยน USE_TILES เป็น true */
+  const jobs=Object.entries(ASSETS).filter(([k])=>USE_TILES||!/^tile/.test(k)).map(load);
   return Promise.race([Promise.all(jobs),sleep(2500)]);
 }
 const art=(k,fb)=>IMG[k]?`<img src="${IMG[k].src}" alt="" draggable="false" class="${IMG[k].px?'px':''}">`:(typeof fb==='function'?fb():fb);
@@ -1093,35 +1098,52 @@ function say(text,voiceId){
   el.classList.remove('hot');void el.offsetWidth;el.classList.add('hot');say.cur=voiceId;if(voiceId)speak(voiceId);
 }
 function layout(){
-  if(!P)return;const m=P.m,stage=$('#play .stage');
-  /* แนวตั้ง: ให้กระดานสูงเท่าที่ต้องใช้ ที่เหลือยกให้แผงการ์ด (ไม่เกิน 55% ของจอ) */
+  if(!P)return;const m=P.m,stage=$('#play .stage'),panel=$('#panel'),pal=$('#palette'),n=P.lv.cards.length,cols=n<=5?n:4,rows=Math.ceil(n/cols);
+  pal.style.gridTemplateColumns=`repeat(${cols},minmax(0,1fr))`;
+  let fitted=false;
   if(innerHeight>innerWidth){
+    /* แนวตั้ง: กระดานสูงเท่าที่ต้องใช้ (ไม่เกิน 60% ของจอ) แล้วจองที่แผงการ์ดให้พอสำหรับคาถาเฉลย (วัดจริง) ช่องกระดานเล็กสุด 38px */
     const W=stage.clientWidth||innerWidth-16,cell=Math.min(84,Math.floor((W-16)/m.w));
-    const need=$('#play .hud').offsetHeight+$('#say').offsetHeight+cell*m.h+36;
-    /* ด่านที่มีแถวประกาย/วงทำซ้ำ ต้องใช้ที่แผงการ์ดมากขึ้น: กระดานได้น้อยลง */
-    const cap=P.lv.cards.includes('F')?.42:P.lv.cards.includes('loop')?.5:.55;
-    stage.style.flexBasis=Math.min(need,Math.round(innerHeight*cap))+'px';
+    const over=$('#play .hud').offsetHeight+$('#say').offsetHeight+36;
+    const maxS=Math.min(over+cell*m.h,Math.round(innerHeight*.6)),minS=Math.min(maxS,over+38*m.h);
+    stage.style.flexBasis=maxS+'px';
+    const sol=P.lv.solP;
+    if(sol&&P.lv.kind!=='step'&&!P.demo){
+      panel.classList.remove('tight','onerow');
+      const real=P.prog,realT=P.target,realS=P.sel;
+      try{P.prog=loadProg(progStr(sol));P.target={s:'main',loop:null};P.sel=null;renderProg();
+        const pg=$('#prog'),clamp=v=>Math.max(minS,Math.min(maxS,v));
+        const need=()=>{const cs=getComputedStyle(pg),g=parseFloat(cs.rowGap)||6;let h=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom);[...pg.children].forEach((e,i)=>h+=e.offsetHeight+(i?g:0));return h};
+        let basis=clamp(maxS+pg.clientHeight-need()-20);stage.style.flexBasis=basis+'px';
+        /* ยังล้น: ใช้แผงแบบกะทัดรัด แล้ววัดใหม่ ให้กระดานได้ที่ที่เหลือคืน */
+        if(need()>pg.clientHeight+2){panel.classList.add('tight');basis=clamp(basis+pg.clientHeight-need()-20);stage.style.flexBasis=basis+'px'}
+        fitted=true;
+      }catch(e){}finally{P.prog=real;P.target=realT;P.sel=realS;renderProg()}
+    }
   }else stage.style.flexBasis='';
   const r=$('#boardWrap').getBoundingClientRect();
   const c=Math.max(30,Math.min(104,Math.floor(Math.min((r.width-16)/m.w,(r.height-20)/m.h))));
   document.documentElement.style.setProperty('--c',c+'px');
-  const panel=$('#panel'),pal=$('#palette'),n=P.lv.cards.length,cols=n<=5?n:4;
-  pal.style.gridTemplateColumns=`repeat(${cols},minmax(0,1fr))`;
-  const pr=panel.getBoundingClientRect(),rows=Math.ceil(n/cols);
-  panel.classList.toggle('tight',pr.height<(rows>1?420:330));
+  const pr=panel.getBoundingClientRect();
+  if(!fitted)panel.classList.toggle('tight',pr.height<(rows>1?420:330));
   const w=pal.clientWidth||pr.width-16;
   const port=innerHeight>innerWidth,cap=rows>1?((port&&pr.height<400)||pr.height<330?46:pr.height<460?52:64):64;
-  const cp=Math.max(40,Math.min(cap,Math.floor((w-(cols-1)*6)/cols)));
-  pal.style.setProperty('--cp',cp+'px');
+  const cp=Math.max(40,Math.min(cap,Math.floor((w-(cols-1)*6)/cols))),prevCp=pal.style.getPropertyValue('--cp'),d=layout.depth||0;
+  /* ขนาดการ์ดในแผงขึ้นกับความสูงแผง และความสูงแผงขึ้นกับขนาดการ์ด: รอบที่ 3 ล็อกขนาดเดิมไว้ ไม่ให้วนกลับไปล้น */
+  if(!(fitted&&d>=2&&prevCp))pal.style.setProperty('--cp',cp+'px');
   panel.classList.toggle('onerow',panel.classList.contains('tight')&&$('#prog').clientHeight<135);
   fitStrips();
+  if(innerHeight>innerWidth&&d<2&&(d===0||pal.style.getPropertyValue('--cp')!==prevCp)){layout.depth=d+1;try{layout()}finally{layout.depth=d}}
 }
 /* แถวเดียว: เลื่อนให้เห็นช่อง + ที่กำลังจะวาง และใส่ขอบจางถ้ามีการ์ดล้น */
 function fitStrips(){
   if(!P)return;const one=$('#panel').classList.contains('onerow');
   const on=$('#prog .slot.on');if(on&&!P.running)on.scrollIntoView({block:'nearest',inline:'nearest'});
   $$('#prog .strip-cards').forEach(e=>{e.classList.toggle('ovf',one&&e.scrollWidth>e.clientWidth+2);arrows(e);if(!e.dataset.w){e.dataset.w=1;e.addEventListener('scroll',()=>arrows(e),{passive:true})}});
+  progCue();const pg=$('#prog');if(pg&&!pg.dataset.cue){pg.dataset.cue=1;pg.addEventListener('scroll',progCue,{passive:true})}
 }
+/* แผงคาถายาวเกินจอ: ขอบล่างจางลงให้รู้ว่าเลื่อนดูต่อได้ */
+function progCue(){const pg=$('#prog');if(pg)pg.classList.toggle('more',pg.scrollHeight-pg.clientHeight-pg.scrollTop>4)}
 /* ลูกศร ‹ › โผล่เมื่อยังมีการ์ดซ่อนอยู่ด้านนั้น แตะเพื่อเลื่อน */
 function arrows(e){const st=e.closest('.strip'),one=$('#panel').classList.contains('onerow');if(!st)return;
   st.classList.toggle('can-l',one&&e.scrollLeft>4);st.classList.toggle('can-r',one&&e.scrollLeft+e.clientWidth<e.scrollWidth-4)}
@@ -1137,12 +1159,12 @@ function renderEnts(){
   const m=P.m;let h=`<div class="ent cat" id="cat" style="--x:${m.cat.x};--y:${m.cat.y}">${petArt()}</div>`;
   if(!P.runCfg)m.rand.forEach(k=>{const[x,y]=k.split(',');h+=`<div class="ent q" style="--x:${x};--y:${y}">${A.q()}</div>`});
   P.stars.forEach(k=>{const[x,y]=k.split(',');h+=`<div class="ent star" data-k="${k}" style="--x:${x};--y:${y}">${art('star',A.star)}</div>`});
-  (P.dots||[]).forEach(k=>{const[x,y]=k.split(',');h+=`<div class="ent dot" style="--x:${x};--y:${y}"><i></i></div>`});
+  (P.dots||[]).forEach(k=>{const[x,y]=k.split(',');h+=`<div class="ent dot${P.stars.has(k)?' on-star':''}" style="--x:${x};--y:${y}"><i></i></div>`});
   h+=`<div class="ent hero" id="hero" style="--x:${P.hero.x};--y:${P.hero.y}"><div class="hb"><div class="hf">${heroArt()}</div></div></div>`;
   $('#ents').innerHTML=h;
 }
 function renderHud(){
-  const lv=P.lv,title=lv.custom==='demo'?tx('ตัวอย่าง','Demo'):lv.custom==='test'?tx('ทดลองเล่น','Test Play'):lv.custom?tx('ด่านของ'+esc(lv.by||'เพื่อน'),lv.by?esc(lv.by)+'’s level':'Friend’s level'):`<i class="lv-w">${tx('ด่าน','Level')} </i>${lv.id}`;
+  const lv=P.lv,title=lv.custom==='demo'?tx('ตัวอย่าง','Demo'):lv.custom==='test'?tx('ทดลองเล่น','Test Play'):lv.custom?tx('ด่านของ '+esc(lv.by||'เพื่อน'),lv.by?esc(lv.by)+'’s level':'Friend’s level'):`<i class="lv-w">${tx('ด่าน','Level')} </i>${lv.id}`;
   $('#lvName').innerHTML=`<b>${title}</b><span>${lv.w.name}</span>`;
   $('#btnHint').hidden=P.fails<2;updateGoal();renderSpeed();
 }
@@ -1172,7 +1194,7 @@ function stripHTML(s,label){
   return `<div class="strip s-${s} ${P.target.s===s&&P.lv.cards.includes('F')?'cur':''}" data-strip="${s}"><div class="strip-label">${label}</div><div class="strip-cards">${P.prog[s].map(cardHTML).join('')}${step?'':`<button class="slot ${on?'on':''}" data-slot="${s}" aria-label="${tx('วางการ์ดต่อท้าย','Add a card at the end')}">+</button>`}</div><button class="sarrow l" data-scroll="-1" aria-label="${tx('เลื่อนดูการ์ดทางซ้าย','Scroll left')}">${ICON.back}</button><button class="sarrow r" data-scroll="1" aria-label="${tx('เลื่อนดูการ์ดทางขวา','Scroll right')}">${ICON.next}</button></div>`;
 }
 function renderProg(){
-  let h='';if(P.lv.cards.includes('F'))h+=stripHTML('fn',CARDS.F.icon+`<span>${tx('คาถาของฉัน','My spell (sparkle row)')}</span>`);
+  let h='';if(P.lv.cards.includes('F'))h+=stripHTML('fn',CARDS.F.icon+`<span>${tx('คาถาของฉัน (แถวประกาย)','My spell (sparkle row)')}</span>`);
   h+=stripHTML('main',`<span>${P.lv.cards.includes('F')?tx('คาถาหลัก','Main spell'):tx('คาถา','Spell')}</span>`);
   $('#prog').innerHTML=h;updateGoal();$('#palette').classList.toggle('replacing',selIsCard());fitStrips();
 }
@@ -1316,6 +1338,7 @@ async function animNoStar(e){
 function puff(x,y,txt){const e=$('#ents');if(!e)return;const d=document.createElement('div');d.className='ent puff';d.style.setProperty('--x',x);d.style.setProperty('--y',y);d.innerHTML=`<span>${txt}</span>`;e.appendChild(d);setTimeout(()=>d.remove(),1000)}
 
 function onFail(r){
+  if(r.r==='not_reached'||r.r==='stars_left')$$('#prog .card.run').forEach(e=>{if(!e.classList.contains('calling'))e.classList.remove('run')});
   P.fails++;if(!P.lv.custom){S.tries[P.lv.id]=(S.tries[P.lv.id]||0)+1;statRun(P.lv,false);save()}
   const rnd=P.m.rand.length>0;let id;
   if(r.r==='bump')id=r.out?'bump_out':'bump';
@@ -1345,7 +1368,7 @@ async function finishWin(){
 function openWin(st,n,prev,fresh=[]){
   const lv=P.lv,par=lv.par,next=lv.custom?null:ALL[lv.idx+1],last=!lv.custom&&(!next||next.wi!==lv.wi);
   const name=(S.name||'').trim();
-  const right=lv.custom?`<button class="btn-gold" data-act="make">${tx('สร้างด่านของฉันบ้าง','Make my own level')}${ICON.next}</button>`:`<button class="btn-gold" data-act="${last?'world':'next'}">${last?tx('ไปต่อ','Go on'):tx('ด่านต่อไป','Next level')}${ICON.next}</button>`;
+  const right=lv.custom?(lv.own?`<button class="btn-gold" data-act="ownedit">${tx('แก้ด่านของฉัน','Edit my level')}${ICON.next}</button>`:`<button class="btn-gold" data-act="make">${tx('สร้างด่านของฉันบ้าง','Make my own level')}${ICON.next}</button>`):`<button class="btn-gold" data-act="${last?'world':'next'}">${last?tx('ไปต่อ','Go on'):tx('ด่านต่อไป','Next level')}${ICON.next}</button>`;
   sheet(`<div class="win"><div class="win-title">${st===3?tx('สุดยอด','Amazing'):tx('ผ่านแล้ว','You did it')}${name?(isEN()?', ':' ')+esc(name):''}!</div>
     <div class="big-stars">${[1,2,3].map(i=>`<span class="bs ${i<=st?'on':'off'}" style="--d:${.15+i*.22}s">${A.star()}</span>`).join('')}</div>
     <p class="win-msg">${tx(`ใช้การ์ด ${n} ใบ`,`You used ${n} cards`)}</p>${st<3?`<p class="win-tip">${tx(`ใช้ไม่เกิน ${par} ใบ จะได้ 3 ดาว ลองอีกทีไหม`,`Use ${par} cards or fewer to get 3 stars. Try again?`)}</p>`:''}${stkNew(fresh)}
@@ -1363,7 +1386,7 @@ function openWorldDone(w){
 }
 function openEnding(){
   const show_=()=>{sheet(`<div class="ending">${IMG.family?`<img class="end-family" src="${IMG.family.src}" alt="">`:`<div class="end-art"><div>${art('wizard',A.wizard)}</div><div>${heroArt()}</div><div>${art('princess',A.princess)}</div><div>${petArt()}</div></div>`}
-    <div class="win-title">${tx('เธอคือนักเวทโค้ดดิ้งตัวจริง!','You are a real coding wizard!')}</div><p class="p">${tx(`ผ่านครบ 8 โลก ได้ ${totalStars()} จาก ${ALL.length*3} ดาว`,`You finished all 8 worlds and got ${totalStars()} of ${ALL.length*3} stars.`)}</p><p class="small">${totalStars()>=ALL.length*3?tx('ได้ครบทุกดาวแล้ว เก่งที่สุดเลย','You got every star. Amazing!'):tx('กลับไปเก็บ 3 ดาวให้ครบทุกด่านได้นะ','You can go back and get 3 stars on every level.')}</p>
+    <div class="win-title">${tx('เธอคือนักเวทโค้ดดิ้งตัวจริง!','You are a real coding wizard!')}</div><p class="p">${(()=>{const wd=WORLDS.filter(w=>lvOf(w).every(l=>(S.best[l.id]||0)>0)).length;return wd>=8?tx(`ผ่านครบ 8 โลก ได้ ${totalStars()} จาก ${ALL.length*3} ดาว`,`You finished all 8 worlds and got ${totalStars()} of ${ALL.length*3} stars.`):tx(`ผ่าน ${wd} จาก 8 โลก ได้ ${totalStars()} จาก ${ALL.length*3} ดาว`,`You finished ${wd} of 8 worlds and got ${totalStars()} of ${ALL.length*3} stars.`)})()}</p><p class="small">${totalStars()>=ALL.length*3?tx('ได้ครบทุกดาวแล้ว เก่งที่สุดเลย','You got every star. Amazing!'):tx('กลับไปเก็บ 3 ดาวให้ครบทุกด่านได้นะ','You can go back and get 3 stars on every level.')}</p>
     <div class="row"><button class="btn-gold" data-act="map">${tx('กลับแผนที่','Back to map')}</button></div></div>`);speak('ending')};
   tryVideo(vidOf('ending'),show_);
 }
@@ -1381,6 +1404,7 @@ function openHint(){
     P.dots=path.filter(k=>k!==ck)}
   else P.dots=[...new Set(t.ev.filter(e=>e.k==='move').map(e=>e.x+','+e.y))].filter(k=>k!==ck);
   renderEnts();
+  say(tx('เดินตามจุดสีทองบนกระดานนะ','Follow the gold dots on the board.'),null);
   let h=`<div class="hint"><div class="win-title small">${tx('คำใบ้จากพ่อมด','A hint from the wizard')}</div><p class="p">${tx('เดินตามจุดสีทองบนกระดานนะ','Follow the gold dots on the board.')}</p>`;
   if(lv.kind!=='step'){
     if(stage===3)h+=`<p class="p">${tx('นี่คือคาถาที่ใช้ได้','Here is a spell that works.')}</p>${ghost(lv.solP,false)}`;
@@ -1588,6 +1612,7 @@ function act(a,el){
       if(!window.confirm(tx('แทนความคืบหน้าในเครื่องนี้ด้วยรหัสนี้?','Replace the progress on this device with this code?')))break;S.best=o.v===2?o.b:migrateIds(o.b);S.skip=o.v===2?(o.s||{}):migrateIds(o.s);S.seen=o.e&&typeof o.e==='object'?o.e:{};if(o.n)S.name=o.n;if(o.a)S.ava=o.a;if(o.p&&Object.prototype.hasOwnProperty.call(PETS,o.p))S.pet=o.p;applyPet();save();toast(tx('ใส่รหัสเรียบร้อย','Code added'));openParent();renderHome()}catch(e){toast(tx('รหัสไม่ถูกต้อง','That code doesn’t work'))}break}
     case 'reset':if(window.confirm(tx('ล้างดาวและด่านที่ผ่านทั้งหมด?','Clear all stars and finished levels?'))){S.best={};S.skip={};S.seen={};S.tries={};S.stat={};S.drafts={};S.stickers={};S.flags={};S.friend={};save();toast(tx('ล้างแล้ว','Cleared'));openParent();renderHome()}break;
     case 'make':closeSheet();openEditor();break;
+    case 'ownedit':{const c=P&&P.lv&&P.lv.code,dd=c&&decodeLevel(c);closeSheet();if(dd)E={w:dd.w,h:dd.h,g:dd.rows.map(r=>r.split('')),tool:'#',theme:dd.theme,tier:dd.tier};openEditor();break}
     case 'demo':{const lv=P&&P.lv;if(!lv||lv.custom)break;const k=el.dataset.k||demoFor(lv),keep={fails:P.fails,hintSaid:P.hintSaid};closeSheet();stopVoice();
       runDemo(k,()=>{playLevel(lv);if(P&&P.lv===lv){P.fails=keep.fails;P.hintSaid=keep.hintSaid;renderHud()}},null,el.dataset.from==='new');break}
     case 'demoagain':closeSheet();runDemo(el.dataset.k,demoBack,demoSkipTo);break;
@@ -1772,7 +1797,7 @@ function openFromHash(){
   if(!lvx.solP){toast(tx('ลิงก์ด่านนี้เปิดไม่ได้','This level link doesn’t work'));return false}
   openFromHash.lv=lvx;d.par=lvx.par;
   const who=by?esc(by):tx('เพื่อน','a friend'),Who=by?esc(by):tx('เพื่อน','A friend');
-  sheet(`<div class="friend"><div class="wd-art"><div>${heroArt()}</div><div class="wd-star">${A.star()}</div><div>${petArt()}</div></div><div class="win-title small">${tx(`ด่านจาก${who}`,`A level from ${who}`)}</div><p class="p">${tx(`${who}สร้างด่านนี้มาให้ ใช้การ์ดไม่เกิน ${d.par} ใบจะได้ 3 ดาว`,`${Who} made this level for you. Use ${d.par} cards or fewer to get 3 stars.`)}</p><div class="row end"><button class="btn-soft" data-act="home">${tx('ไว้ทีหลัง','Later')}</button><button class="btn-gold" data-act="friendgo">${tx('เล่นเลย','Play now')}${ICON.next}</button></div></div>`);
+  sheet(`<div class="friend"><div class="wd-art"><div>${heroArt()}</div><div class="wd-star">${A.star()}</div><div>${petArt()}</div></div><div class="win-title small">${tx(`ด่านจาก ${who}`,`A level from ${who}`)}</div><p class="p">${tx(`${who} สร้างด่านนี้มาให้ ใช้การ์ดไม่เกิน ${d.par} ใบจะได้ 3 ดาว`,`${Who} made this level for you. Use ${d.par} cards or fewer to get 3 stars.`)}</p><div class="row end"><button class="btn-soft" data-act="home">${tx('ไว้ทีหลัง','Later')}</button><button class="btn-gold" data-act="friendgo">${tx('เล่นเลย','Play now')}${ICON.next}</button></div></div>`);
   speak('friend');return true;
 }
 $('#edBoard').addEventListener('click',e=>{const c=e.target.closest('[data-x]');if(c)edTap(+c.dataset.x,+c.dataset.y)});

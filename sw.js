@@ -1,5 +1,5 @@
 /* ตัวช่วยให้เกมเปิดได้แม้ไม่มีเน็ต — เปลี่ยนเลข v ทุกครั้งที่แก้ไฟล์นี้ */
-const CACHE = 'leah-code-v8';
+const CACHE = 'leah-code-v9';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
