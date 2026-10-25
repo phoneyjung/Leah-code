@@ -1,0 +1,272 @@
+# ตรวจข้อมูลลับ/ข้อมูลส่วนตัวทุกครั้งที่อัปไฟล์ขึ้น repo
+# ขึ้นกากบาทแดง = มีของที่ไม่ควรเปิดเผย เปิดแท็บ Actions ดูว่าไฟล์ไหน บรรทัดไหน
+# (ค่าในผลตรวจถูกปิดบังไว้ log ของ repo สาธารณะจึงไม่ทำข้อมูลหลุดซ้ำ)
+name: Leak check
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan for secrets and personal data
+        run: |
+          cat > "$RUNNER_TEMP/leak_check.py" <<'PYEOF'
+          #!/usr/bin/env python3
+          """leak_check.py: scan for secrets and personal data before publishing to a public GitHub repo.
+
+          Usage:  python3 leak_check.py [files or folders ...] [--json] [--strict]
+          Exit:   0 = pass, 1 = something must be removed (or a warning with --strict), 2 = bad input
+          Allow something on purpose (a shop phone number, say):
+            - put  leakcheck:allow  anywhere on that line, or
+            - add the text to .leakcheck-allow at the project root (one per line, # = comment),
+              or  rule:<id>  to silence a whole rule (e.g. rule:email)
+          Values are always masked in the output, because CI logs of a public repo are public too.
+          Standard-library Python 3.8+ only.
+          """
+          import argparse
+          import json
+          import os
+          import re
+          import sys
+
+          TEXT_EXT = {".html", ".htm", ".js", ".mjs", ".cjs", ".jsx", ".ts", ".tsx", ".vue",
+                      ".json", ".css", ".md", ".txt", ".csv", ".tsv", ".yml", ".yaml", ".xml",
+                      ".svg", ".py", ".gs", ".toml", ".ini", ".cfg", ".env", ".sh", ".php",
+                      ".sql", ".webmanifest"}
+          DATA_EXT = {".xlsx", ".xls", ".xlsm", ".csv", ".tsv", ".db", ".sqlite", ".sqlite3",
+                      ".sql", ".bak"}
+          SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", "venv", ".next", ".cache"}
+          SELF_FILES = {"leak_check.py", "leak-check.yml", ".leakcheck-allow"}
+          RISKY_FILE = re.compile(
+              r"(^\.env(\.(?!example$|sample$|template$)[\w.-]+)?$"
+              r"|service[-_]?account[\w.-]*\.json$|firebase-adminsdk[\w.-]*\.json$"
+              r"|\.(pem|key|p12|pfx|jks|keystore)$|^id_(rsa|ed25519|ecdsa)$)", re.I)
+          MAX_BYTES = 5_000_000
+          MAX_PRINT = 40
+          L = r"(?<![0-9A-Za-z_.])"   # number must not be glued to other digits/letters
+          R = r"(?![0-9A-Za-z_])"
+
+
+          def thai_id(s):
+              d = [int(c) for c in s if c.isdigit()]
+              if len(d) != 13 or (11 - sum(d[i] * (13 - i) for i in range(12)) % 11) % 10 != d[12]:
+                  return None   # checksum fails, not a real ID
+              if s.isdigit() and 1_000_000_000_000 <= int(s) <= 2_500_000_000_000:
+                  return "warn"   # also looks like a millisecond timestamp, let a human look
+              return "block"
+
+
+          def luhn(s):
+              total = 0
+              for i, n in enumerate(int(c) for c in reversed(s) if c.isdigit()):
+                  if i % 2:
+                      n = n * 2 - 9 if n > 4 else n * 2
+                  total += n
+              return total % 10 == 0
+
+
+          def real_email(s):
+              if re.search(r"\.(png|jpe?g|gif|webp|svg|ico|js|css)$", s, re.I):
+                  return False
+              return not re.search(r"@(example|test|domain|email|yourdomain)\.", s, re.I)
+
+
+          PLAIN_WORDS = {"password", "pass", "passcode", "pin", "text", "hidden", "email", "token",
+                         "secret", "none", "null", "undefined", "string", "number", "required"}
+
+
+          def real_value(s):
+              """False for error codes / identifiers such as "auth/wrong-password", "securetoken.googleapis.com"."""
+              q = re.search(r"['\"`](.*)['\"`]$", s)
+              v = q.group(1) if q else s
+              if v.lower() in PLAIN_WORDS:
+                  return False
+              return not re.fullmatch(r"[a-z]+(?:[-_/.][a-z]+)+", v)
+
+
+          def real_secret(s):
+              return "AIza" not in s and real_value(s)
+
+
+          # (id, severity, regex, label, check)  most specific first; overlapping matches keep the first
+          RULES = [
+              ("private-key", "block", r"-----BEGIN (?:RSA |EC |DSA |OPENSSH |ENCRYPTED )?PRIVATE KEY-----",
+               "คีย์ส่วนตัว (private key)", None),
+              ("service-account", "block", r'"type"\s*:\s*"service_account"',
+               "ไฟล์ service account ของ Google/Firebase (สิทธิ์ admin)", None),
+              ("github-token", "block", r"\b(?:gh[pousr]_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{22,})",
+               "GitHub token", None),
+              ("anthropic-key", "block", r"\bsk-ant-[A-Za-z0-9_\-]{20,}", "Anthropic API key", None),
+              ("openai-key", "block", r"\bsk-(?!ant-)(?:proj-)?[A-Za-z0-9_\-]{32,}", "OpenAI API key", None),
+              ("stripe-key", "block", r"\b[rs]k_live_[A-Za-z0-9]{20,}", "Stripe live key", None),
+              ("telegram-token", "block", r"\b\d{8,10}:AA[A-Za-z0-9_\-]{33}\b", "Telegram bot token", None),
+              ("line-secret", "block",
+               r"(?i)channel_?(?:secret|access_?token)\W{0,3}\s*[:=]{1,3}\s*['\"`][^'\"`\s]{20,}['\"`]",
+               "LINE channel secret / access token", None),
+              ("password", "block",
+               r"(?i)\b[A-Za-z_]*(?:password|passwd|pwd|passcode|pincode|pin_code|admin_?pin)\b\W{0,2}"
+               r"\s*[:=]{1,3}\s*['\"`][^'\"`\s]{4,}['\"`]",
+               "รหัสผ่าน/PIN ฝังในโค้ด", real_value),
+              ("secret", "block",
+               r"(?i)\b[A-Za-z_]*(?:secret|token|apikey|api_key)[A-Za-z_]*\W{0,2}\s*[:=]{1,3}\s*"
+               r"['\"`][A-Za-z0-9_\-.+/=]{20,}['\"`]",
+               "secret/token/API key ฝังในโค้ด", real_secret),
+              ("google-api-key", "warn", r"\bAIza[0-9A-Za-z_\-]{35}\b",
+               "Google/Firebase API key (ปกติถ้าเป็น Firebase web config แต่ต้องตั้ง Security Rules และจำกัดโดเมนของคีย์)",
+               None),
+              ("card-number", "block", L + r"(?:4\d{3}|5[1-5]\d{2}|2[2-7]\d{2})(?:[ -]?\d{4}){3}" + R,
+               "เลขบัตรเครดิต", luhn),
+              ("thai-id", "block", L + r"[1-8](?:\d{12}|-\d{4}-\d{5}-\d{2}-\d|\s\d{4}\s\d{5}\s\d{2}\s\d)" + R,
+               "เลขบัตรประชาชน", thai_id),
+              ("bank-account", "block", L + r"\d{3}-\d-\d{5}-\d" + R, "เลขบัญชีธนาคาร", None),
+              ("thai-mobile", "block",
+               L + r"(?:0[689]\d(?:\d{7}|-\d{3}-\d{4}|\s\d{3}\s\d{4}|-\d{7}|\.\d{3}\.\d{4})"
+                   r"|\+66[\s-]?[689]\d[\s-]?\d{3}[\s-]?\d{4})" + R,
+               "เบอร์มือถือ", None),
+              ("email", "warn", r"[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(?:\.[A-Za-z0-9\-]+)*\.[A-Za-z]{2,}",
+               "อีเมล", real_email),
+          ]
+          COMPILED = [(rid, sev, re.compile(rx), label, chk) for rid, sev, rx, label, chk in RULES]
+
+
+          def mask(s):
+              s = s.strip()
+              q = re.search(r"['\"`]", s)
+              if q and q.start() > 0:            # name = "value" → keep the name, hide the whole value
+                  return s[:q.start()].rstrip() + ' "****"'
+              if len(s) > 12:
+                  return "%s…%s (%d ตัวอักษร)" % (s[:4], s[-2:], len(s))
+              if len(s) > 6:
+                  return "%s…%s" % (s[:3], s[-2:])
+              return s[:1] + "*" * (len(s) - 1)
+
+
+          def load_allow(paths):
+              entries, seen = [], set()
+              for p in list(paths) + [os.getcwd()]:
+                  base = p if os.path.isdir(p) else os.path.dirname(os.path.abspath(p))
+                  f = os.path.abspath(os.path.join(base, ".leakcheck-allow"))
+                  if f in seen or not os.path.isfile(f):
+                      continue
+                  seen.add(f)
+                  with open(f, encoding="utf-8", errors="replace") as fh:
+                      for ln in fh:
+                          ln = ln.strip()
+                          if ln and not ln.startswith("#"):
+                              entries.append(ln)
+              return entries
+
+
+          def allowed(rid, text, allow):
+              for a in allow:
+                  if a == "rule:" + rid or (not a.startswith("rule:") and (a in text or text in a)):
+                      return True
+              return False
+
+
+          def iter_files(paths):
+              for p in paths:
+                  if os.path.isfile(p):
+                      yield p
+                      continue
+                  for dirpath, dirnames, filenames in os.walk(p):
+                      dirnames[:] = sorted(d for d in dirnames if d not in SKIP_DIRS)
+                      for fn in sorted(filenames):
+                          yield os.path.join(dirpath, fn)
+
+
+          def scan_file(path, allow, out):
+              name = os.path.basename(path)
+              if name in SELF_FILES:
+                  return 0
+              rel = os.path.relpath(path)
+              ext = os.path.splitext(name)[1].lower()
+              if RISKY_FILE.search(name) and not allowed("risky-file", name, allow):
+                  out.append(dict(severity="block", file=rel, line=0, rule="risky-file",
+                                  label="ไฟล์ที่ไม่ควรขึ้น repo (คีย์/ค่าลับ)", shown=name))
+              if ext in DATA_EXT and not allowed("data-file", name, allow):
+                  out.append(dict(severity="warn", file=rel, line=0, rule="data-file",
+                                  label="ไฟล์ข้อมูล: เช็กว่าไม่มีข้อมูลลูกค้า/พนักงานจริง", shown=name))
+              if not (ext in TEXT_EXT or name.startswith(".env")):
+                  return 0
+              try:
+                  if os.path.getsize(path) > MAX_BYTES:
+                      out.append(dict(severity="warn", file=rel, line=0, rule="too-big",
+                                      label="ไฟล์ใหญ่เกิน 5 MB ไม่ได้สแกน", shown=name))
+                      return 0
+                  with open(path, encoding="utf-8", errors="replace") as fh:
+                      lines = fh.read().splitlines()
+              except OSError as e:
+                  print("อ่านไม่ได้: %s (%s)" % (rel, e), file=sys.stderr)
+                  return 0
+              for no, line in enumerate(lines, 1):
+                  if "leakcheck:allow" in line:
+                      continue
+                  spans = []
+                  for rid, sev, rx, label, chk in COMPILED:
+                      for m in rx.finditer(line):
+                          a, b = m.span()
+                          if any(a < y and x < b for x, y in spans):
+                              continue
+                          s = m.group(0)
+                          verdict = sev if chk is None else chk(s)
+                          if verdict is True:
+                              verdict = sev
+                          if not verdict:
+                              continue
+                          spans.append((a, b))
+                          if allowed(rid, s, allow):
+                              continue
+                          out.append(dict(severity=verdict, file=rel, line=no, rule=rid,
+                                          label=label, shown=mask(s)))
+              return 1
+
+
+          def main(argv=None):
+              ap = argparse.ArgumentParser(description="สแกนข้อมูลลับ/ข้อมูลส่วนตัวก่อนขึ้น GitHub สาธารณะ")
+              ap.add_argument("paths", nargs="*", default=["."], help="ไฟล์หรือโฟลเดอร์ (ค่าเริ่มต้น: .)")
+              ap.add_argument("--json", action="store_true", help="แสดงผลเป็น JSON")
+              ap.add_argument("--strict", action="store_true", help="นับรายการ 'ควรเช็ก' เป็นไม่ผ่านด้วย")
+              a = ap.parse_args(argv)
+              missing = [p for p in a.paths if not os.path.exists(p)]
+              if missing:
+                  print("ไม่พบ: " + ", ".join(missing), file=sys.stderr)
+                  return 2
+              allow = load_allow(a.paths)
+              findings, scanned = [], 0
+              for f in iter_files(a.paths):
+                  scanned += scan_file(f, allow, findings)
+              block = [x for x in findings if x["severity"] == "block"]
+              warn = [x for x in findings if x["severity"] == "warn"]
+              failed = bool(block) or (a.strict and bool(warn))
+              if a.json:
+                  print(json.dumps({"scanned_files": scanned, "passed": not failed, "findings": findings},
+                                   ensure_ascii=False, indent=2))
+                  return 1 if failed else 0
+              for title, items in (("🔴 ต้องเอาออกก่อนขึ้น repo", block), ("🟡 ควรเช็ก", warn)):
+                  if not items:
+                      continue
+                  print("%s (%d)" % (title, len(items)))
+                  for x in items[:MAX_PRINT]:
+                      loc = x["file"] + (":%d" % x["line"] if x["line"] else "")
+                      print("  %s  %s  [%s]" % (loc, x["label"], x["shown"]))
+                  if len(items) > MAX_PRINT:
+                      print("  …อีก %d รายการ (ใช้ --json ดูทั้งหมด)" % (len(items) - MAX_PRINT))
+              print("%s: สแกน %d ไฟล์ · ต้องเอาออก %d · ควรเช็ก %d"
+                    % ("❌ ไม่ผ่าน" if failed else "✅ ผ่าน", scanned, len(block), len(warn)))
+              if block:
+                  print("แก้: ลบหรือย้ายค่าลับออกจากโค้ด ถ้าตั้งใจเปิดเผย ใส่ leakcheck:allow ในบรรทัดนั้น"
+                        " หรือเพิ่มลงไฟล์ .leakcheck-allow")
+                  print("ถ้าไฟล์นี้เคยขึ้น repo แล้ว: ลบอย่างเดียวไม่พอ ประวัติ git ยังมี ต้องเปลี่ยนคีย์/รหัสใหม่ด้วย")
+              return 1 if failed else 0
+
+
+          if __name__ == "__main__":
+              sys.exit(main())
+          PYEOF
+          python3 "$RUNNER_TEMP/leak_check.py" .
