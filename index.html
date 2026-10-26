@@ -184,6 +184,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .prog{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:2px}
 .prog.more{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 30px),rgba(0,0,0,.15));mask-image:linear-gradient(to bottom,#000 calc(100% - 30px),rgba(0,0,0,.15))}
 .prog .s-fn{position:sticky;top:0;z-index:2;background:var(--cream2)}
+.prog.up .s-fn{box-shadow:0 5px 6px -5px rgba(60,40,110,.35)}
 .strip{background:var(--cream);border-radius:16px;padding:6px 8px 8px;border:2px solid transparent}
 .strip.cur{border-color:var(--purple-l)}
 .strip.s-fn{background:#F4F0FC}
@@ -220,7 +221,11 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .panel.tight .strip{display:flex;align-items:center;gap:6px;padding:3px 6px}
 .panel.tight .strip-label{margin:0;flex:0 0 auto}
 .panel.tight .strip-label span{display:none}
-.panel.tight .s-main .strip-label{display:none}
+/* แถวเดียวเลื่อนข้าง: ใส่ชื่อสั้นใต้ไอคอน (ประกาย/หลัก) เพราะความกว้างไม่ทำให้การ์ดตกบรรทัด */
+.panel.tight .s-main .strip-label:not(.has-s),.panel.tight:not(.onerow) .s-main .strip-label{display:none}
+.sl-s{display:none;font-style:normal}
+.panel.onerow .strip-label.has-s{flex-direction:column;justify-content:center;gap:1px;min-width:38px}
+.panel.onerow .sl-s{display:block;font-size:10.5px;line-height:1.1;text-align:center;white-space:nowrap}
 .panel.tight .strip-cards .card,.panel.tight .strip-cards>.slot{width:40px;height:40px}
 .panel.tight .loop-body .card,.panel.tight .loop-body .slot{width:40px;height:40px}
 .panel.tight .ctl{height:48px;min-width:50px}
@@ -256,7 +261,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .lang-sw button.on{background:var(--purple);color:#fff}
 @container (max-width:520px){.g-unit{display:none}html[lang=en] .lv-name b{font-size:15px}}
 .world{container-type:inline-size}
-@container (max-width:380px){html[lang=en] .w-demo{padding:4px;width:40px;justify-content:center}html[lang=en] .w-demo span{display:none}html[lang=en] .w-name{font-size:17px}}
+@container (max-width:380px){html[lang=en] .w-name{font-size:17px}}
 .seg.lang button{min-width:72px}
 /* หน้าต่างซ้อน */
 .ov{position:fixed;inset:0;background:#3d2c5a73;display:grid;place-items:center;z-index:50;padding:calc(12px + var(--st)) 12px calc(12px + var(--sb))}
@@ -341,7 +346,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 @keyframes tapring{from{transform:scale(.3);opacity:1}to{transform:scale(1.4);opacity:0}}
 .w-demo{display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:4px 12px 4px 8px;border-radius:999px;background:#fff;color:var(--purple-dd);font-size:13.5px;box-shadow:0 0 0 2px var(--purple-l) inset;white-space:nowrap}
 .w-demo svg{width:18px;height:18px}
-@media (max-width:600px){.w-demo{padding:4px;width:40px;justify-content:center}.w-demo span{display:none}}
+@media (max-width:600px){.w-demo{flex-direction:column;justify-content:center;gap:0;min-height:44px;min-width:46px;padding:3px 6px;border-radius:14px;font-size:11px;line-height:1.15}}
 .toast{position:fixed;left:50%;top:calc(12px + var(--st));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:16px;z-index:60;max-width:90vw;text-align:center}
 .toast.show{animation:popin .2s}
 
@@ -388,8 +393,9 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .ctl.sm svg{width:20px;height:20px}
 .ed-row.seg{justify-content:flex-start}
 .ed-row.seg button{min-height:44px;min-width:44px;padding:6px 12px;font-size:15px}
-.ed-panel.short .pal-cap,.ed-panel.short .ed-row>span:not(.grp){display:none}
-.ed-panel.short .ed-scroll{gap:7px}
+.ed-panel.short1 .pal-cap,.ed-panel.short .ed-row>span:not(.grp){display:none}
+.ed-panel.short1 .ed-scroll{gap:7px}
+.ed-panel.short1 .ed-row{column-gap:8px}.ed-panel.short1 .ed-row.seg button{padding:6px 9px}
 .ed-panel.short .tool{max-width:48px}
 .ed-panel.short .ed-row.seg button{padding:6px 9px}
 @media (orientation:landscape) and (max-height:380px){#edit .stage{flex-basis:55%}#edit .ed-panel{flex-basis:45%}#edSay .say-text{font-size:14px;line-height:1.3}.ed-panel.short .ed-tools{gap:4px}}
@@ -516,7 +522,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
    ไฟล์เดียว ใช้กับ GitHub Pages + ติดตั้งเป็นแอป (PWA)
    ใส่ภาพ/เสียง/วิดีโอเองได้: วางไฟล์ตามชื่อใน ASSETS / VOICE
    ========================================================= */
-const VERSION='2.2.2';
+const VERSION='2.2.3';
 
 /*ENGINE_START*/
 const MOVES={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]};
@@ -1058,7 +1064,7 @@ function renderMap(){
   const gotStk=STK.filter(s=>S.stickers[s.id]).length;
   $('#worlds').innerHTML=`<div class="specials"><button class="sp" data-sp="stickers"><span class="sp-ico">${A.star()}</span><span><b>${tx('สมุดสติกเกอร์','Sticker Book')}</b><small>${tx(`สะสมได้ ${gotStk} จาก ${STK.length} ดวง`,`${gotStk} of ${STK.length} collected`)}</small></span></button><button class="sp" data-sp="make"><span class="sp-ico">${A.wall(1)}</span><span><b>${tx('สร้างด่านเอง','Make a Level')}</b><small>${tx('แล้วส่งลิงก์ให้เพื่อนเล่น','and send it to a friend')}</small></span></button></div>`+WORLDS.map((w,wi)=>{
     const lv=ALL.filter(l=>l.wi===wi),open=unlocked(lv[0]),got=lv.reduce((s,l)=>s+(S.best[l.id]||0),0);
-    return `<div class="world ${open?'':'locked'}" style="--wc:${WORLD_TILE[w.n][2]};--wt:${WORLD_TILE[w.n][1]}"><div class="w-head"><div class="w-ico">${art('wall'+w.n,()=>A.wall(w.n))}</div><div class="w-txt"><div class="w-name">${w.n}. ${w.name}</div><div class="w-idea">${w.idea}, ${tx(w.age+' ขวบ','ages '+w.age)}</div></div><div class="w-stars">${ICON.star}${got}/${lv.length*3}</div>${open?`<button class="w-demo" data-demo="d${w.n}" aria-label="${tx('ดูตัวอย่างโลก'+w.name,'Watch how to play '+w.name)}">${ICON.play}<span>${tx('ตัวอย่าง','Watch')}</span></button>`:''}</div>
+    return `<div class="world ${open?'':'locked'}" style="--wc:${WORLD_TILE[w.n][2]};--wt:${WORLD_TILE[w.n][1]}"><div class="w-head"><div class="w-ico">${art('wall'+w.n,()=>A.wall(w.n))}</div><div class="w-txt"><div class="w-name">${w.n}. ${w.name}</div><div class="w-idea">${w.idea}, <span class="nw">${tx(w.age+' ขวบ','ages '+w.age)}</span></div></div><div class="w-stars">${ICON.star}${got}/${lv.length*3}</div>${open?`<button class="w-demo" data-demo="d${w.n}" aria-label="${tx('ดูตัวอย่างโลก'+w.name,'Watch how to play '+w.name)}">${ICON.play}<span>${tx('ตัวอย่าง','Watch')}</span></button>`:''}</div>
       <div class="w-lvls">${lv.map(l=>{const u=unlocked(l),b=S.best[l.id]||0,fresh=u&&!done(l.id)&&l.idx<maxDone();return `<button class="lv ${u?'':'lock'} ${b?'done':''} ${fresh?'fresh':''} ${!b&&S.skip[l.id]?'skipped':''}" data-lv="${l.idx}" ${u?'':'disabled'} aria-label="${tx('ด่าน '+l.id+(u?'':' ล็อกอยู่'),'Level '+l.id+(u?'':', locked'))}"><span class="lv-n">${u?l.li+1:ICON.lock}</span><span class="lv-s">${[1,2,3].map(i=>`<i class="${i<=b?'on':''}"></i>`).join('')}</span></button>`}).join('')}</div></div>`;
   }).join('');
   const cur=nextLv();
@@ -1143,7 +1149,7 @@ function fitStrips(){
   progCue();const pg=$('#prog');if(pg&&!pg.dataset.cue){pg.dataset.cue=1;pg.addEventListener('scroll',progCue,{passive:true})}
 }
 /* แผงคาถายาวเกินจอ: ขอบล่างจางลงให้รู้ว่าเลื่อนดูต่อได้ */
-function progCue(){const pg=$('#prog');if(pg)pg.classList.toggle('more',pg.scrollHeight-pg.clientHeight-pg.scrollTop>4)}
+function progCue(){const pg=$('#prog');if(!pg)return;pg.classList.toggle('more',pg.scrollHeight-pg.clientHeight-pg.scrollTop>4);pg.classList.toggle('up',pg.scrollTop>2)}
 /* ลูกศร ‹ › โผล่เมื่อยังมีการ์ดซ่อนอยู่ด้านนั้น แตะเพื่อเลื่อน */
 function arrows(e){const st=e.closest('.strip'),one=$('#panel').classList.contains('onerow');if(!st)return;
   st.classList.toggle('can-l',one&&e.scrollLeft>4);st.classList.toggle('can-r',one&&e.scrollLeft+e.clientWidth<e.scrollWidth-4)}
@@ -1189,13 +1195,13 @@ function loopHTML(nd){
   const tgt=P.target.loop===nd.id;
   return `<div class="loop ${tgt?'tgt':''} ${P.sel===nd.id?'sel':''}" data-loop="${nd.id}"><button class="loop-head" data-lhead="${nd.id}" aria-label="${tx('วงทำซ้ำ แตะเพื่อเลือก','Repeat loop, tap to select')}">${CARDS.loop.icon}</button><button class="loop-n" data-lcount="${nd.id}" aria-label="${tx(`จำนวนรอบ ${nd.n} แตะเพื่อเปลี่ยน`,`${nd.n} times, tap to change`)}">×${nd.n}</button><div class="loop-body">${nd.body.map(cardHTML).join('')}<button class="slot ${tgt?'on':''}" data-slot="loop:${nd.id}" aria-label="${tx('วางการ์ดในวง','Add a card to the loop')}">+</button></div></div>`;
 }
-function stripHTML(s,label){
+function stripHTML(s,label,short){
   const on=P.target.s===s&&!P.target.loop,step=P.lv.kind==='step';
-  return `<div class="strip s-${s} ${P.target.s===s&&P.lv.cards.includes('F')?'cur':''}" data-strip="${s}"><div class="strip-label">${label}</div><div class="strip-cards">${P.prog[s].map(cardHTML).join('')}${step?'':`<button class="slot ${on?'on':''}" data-slot="${s}" aria-label="${tx('วางการ์ดต่อท้าย','Add a card at the end')}">+</button>`}</div><button class="sarrow l" data-scroll="-1" aria-label="${tx('เลื่อนดูการ์ดทางซ้าย','Scroll left')}">${ICON.back}</button><button class="sarrow r" data-scroll="1" aria-label="${tx('เลื่อนดูการ์ดทางขวา','Scroll right')}">${ICON.next}</button></div>`;
+  return `<div class="strip s-${s} ${P.target.s===s&&P.lv.cards.includes('F')?'cur':''}" data-strip="${s}"><div class="strip-label ${short?'has-s':''}">${label}${short?`<i class="sl-s">${short}</i>`:''}</div><div class="strip-cards">${P.prog[s].map(cardHTML).join('')}${step?'':`<button class="slot ${on?'on':''}" data-slot="${s}" aria-label="${tx('วางการ์ดต่อท้าย','Add a card at the end')}">+</button>`}</div><button class="sarrow l" data-scroll="-1" aria-label="${tx('เลื่อนดูการ์ดทางซ้าย','Scroll left')}">${ICON.back}</button><button class="sarrow r" data-scroll="1" aria-label="${tx('เลื่อนดูการ์ดทางขวา','Scroll right')}">${ICON.next}</button></div>`;
 }
 function renderProg(){
-  let h='';if(P.lv.cards.includes('F'))h+=stripHTML('fn',CARDS.F.icon+`<span>${tx('คาถาของฉัน (แถวประกาย)','My spell (sparkle row)')}</span>`);
-  h+=stripHTML('main',`<span>${P.lv.cards.includes('F')?tx('คาถาหลัก','Main spell'):tx('คาถา','Spell')}</span>`);
+  let h='';if(P.lv.cards.includes('F'))h+=stripHTML('fn',CARDS.F.icon+`<span>${tx('คาถาของฉัน (แถวประกาย)','My spell (sparkle row)')}</span>`,tx('ประกาย','Sparkle'));
+  h+=stripHTML('main',`<span>${P.lv.cards.includes('F')?tx('คาถาหลัก','Main spell'):tx('คาถา','Spell')}</span>`,P.lv.cards.includes('F')?tx('หลัก','Main'):'');
   $('#prog').innerHTML=h;updateGoal();$('#palette').classList.toggle('replacing',selIsCard());fitStrips();
 }
 function renderCtrls(){
@@ -1728,12 +1734,14 @@ function renderEditor(){
   b.innerHTML=h+`<div class="ents">${ents}</div>`;
   $('#edTools').innerHTML=ED_TOOLS.map(t=>`<div class="pal"><button class="tool ${E.tool===t.k?'on':''}" data-tool="${t.k}" aria-label="${tx('เครื่องมือ'+(t.k==='C'?'น้อง'+petName():t.name),(t.k==='C'?petName():t.name)+' tool')}">${toolIcon(t.k)}</button><span class="pal-cap">${t.k==='C'?petName():t.name}</span></div>`).join('');
   $('#edSize').innerHTML=`<span>${tx('ขนาด','Size')}</span>`+ED_SIZES.map(([w,h])=>`<button class="${E.w===w&&E.h===h?'on':''}" data-size="${w}x${h}" aria-label="${tx(`กระดาน ${w} คูณ ${h}`,`Board ${w} by ${h}`)}">${w}×${h}</button>`).join('');
-  const pr=$('#edit .ed-panel').getBoundingClientRect();$('#edit .ed-panel').classList.toggle('short',pr.height<380);
   $('#edTheme').innerHTML=`<span>${tx('ฉาก','Scene')}</span><button class="ctl sm" data-ed="t-" aria-label="${tx('ฉากก่อนหน้า','Previous scene')}">${ICON.back}</button><b class="wide">${WORLDS[E.theme-1].name}</b><button class="ctl sm" data-ed="t+" aria-label="${tx('ฉากถัดไป','Next scene')}">${ICON.next}</button>`;
   $('#edTier').innerHTML=`<span>${tx('การ์ด','Cards')}</span>`+TIERS.map(t=>`<button class="${E.tier===t.n?'on':''}" data-tier="${t.n}">${t.name}</button>`).join('');
   $('#edMine').innerHTML=ICON.list+`<span>${tx('ของฉัน','Mine')} ${S.mine.length}</span>`;
   $('#edClear').innerHTML=ICON.restart+`<span>${tx('ล้าง','Clear')}</span>`;$('#edClear').classList.remove('confirm');
   $('#edTest').innerHTML=ICON.play+`<span>${tx('ลองเล่น','Test Play')}</span>`;
+  /* ซ่อนชื่อเครื่องมือ/หัวข้อเฉพาะเมื่อจอไม่พอจริง ๆ (วัดจากเนื้อหา ไม่ใช่เดาจากความสูง) */
+  const edp=$('#edit .ed-panel'),eds=$('#edit .ed-scroll'),over=()=>eds&&eds.scrollHeight>eds.clientHeight+1;edp.classList.remove('short','short1');
+  if(over()){edp.classList.add('short1');if(over())edp.classList.add('short')}
   try{S.edDraft=JSON.stringify(E);save()}catch(e){}
 }
 function edResize(w,h){
