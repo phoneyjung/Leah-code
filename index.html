@@ -84,7 +84,7 @@ svg{display:block}
 .home-tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 @media (orientation:portrait){.home-wrap{flex-direction:column;justify-content:center}.home-art{flex:0 0 auto;height:auto;width:100%}.home-art .title-img{margin-top:50px;max-height:min(33vh,calc(100vh - 480px))}.stage-oval{width:min(100%,420px)}}
 @media (max-height:340px){.title small{display:none}.title{font-size:22px!important}.ava,.pet{width:46px!important;height:46px!important}.pet span{display:none}#nameIn{height:40px!important;width:120px}#btnPlay{font-size:18px!important;padding:8px 24px!important}.home-tools .chip{font-size:13px!important;padding:4px 10px!important}.home-side{gap:6px!important}.home-wrap{gap:6px}}
-@media (max-height:420px){.intro-face{width:72px;flex-basis:72px}.intro-idea{font-size:20px}.p{font-size:15px;margin:4px 0}.ic .card{--cs:44px}.win-title{font-size:24px}.bs{width:58px;height:58px}.sheet{padding:14px 18px}.sheet .row.end{bottom:-14px;padding-bottom:10px;margin-bottom:-10px}}
+@media (max-height:420px){.wdone .wd-art{max-width:200px}.intro-face{width:72px;flex-basis:72px}.intro-idea{font-size:20px}.p{font-size:15px;margin:4px 0}.ic .card{--cs:44px}.win-title{font-size:24px}.bs{width:58px;height:58px}.sheet{padding:14px 18px}.sheet .row.end{bottom:-14px;padding-bottom:10px;margin-bottom:-10px}}
 @media (max-height:420px){.fan{display:none}.title{font-size:26px}.title small{font-size:13px}.sub{display:none}.home-side{gap:8px}.ava{width:54px;height:54px;border-radius:16px}#nameIn{height:44px}.pet{width:54px;height:54px;border-radius:16px}#btnPlay{font-size:21px;padding:10px 30px}.chip{padding:5px 12px;font-size:14px}}
 
 /* แผนที่ */
@@ -102,7 +102,7 @@ svg{display:block}
 .w-idea{font-size:14px;color:var(--purple-d)}
 .w-stars{display:flex;align-items:center;gap:4px;font-size:15px;color:var(--purple-d)}
 .w-stars svg{width:18px;height:18px}
-.w-lvls{display:grid;grid-template-columns:repeat(4,58px);gap:8px;margin-top:10px}
+.w-lvls{display:grid;grid-template-columns:repeat(4,58px);gap:8px;margin-top:10px;justify-content:center}
 .lv{width:58px;height:64px;border-radius:18px;background:var(--purple-ll);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--purple-dd);box-shadow:0 4px 0 var(--purple-l)}
 .lv:active{transform:translateY(3px);box-shadow:0 1px 0 var(--purple-l)}
 .lv-n{font-size:21px;line-height:1}
@@ -189,6 +189,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .prog{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:2px}
 .prog.more{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 30px),rgba(0,0,0,.15));mask-image:linear-gradient(to bottom,#000 calc(100% - 30px),rgba(0,0,0,.15))}
 .prog .s-fn{position:sticky;top:0;z-index:2;background:var(--cream2)}
+.prog.nostick .s-fn{position:static}
 .prog.up .s-fn{box-shadow:0 5px 6px -5px rgba(60,40,110,.35)}
 .strip{background:var(--cream);border-radius:16px;padding:6px 8px 8px;border:2px solid transparent}
 .strip.cur{border-color:var(--purple-l)}
@@ -339,7 +340,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .wd-art .wd-star{width:22%;animation:float 2.4s ease-in-out infinite}
 .nw{white-space:nowrap}
 @media (orientation:landscape) and (max-height:420px){.home-art{flex:0 0 50%!important;padding-top:50px;box-sizing:border-box}.home-tools{flex-wrap:nowrap!important;gap:6px!important}.home-tools .chip{padding:4px 9px!important;font-size:13px!important;white-space:nowrap}}
-.lv-w{font-style:normal}
+.lv-w,.lv-bw{font-style:normal}
 @media (max-width:400px){.lv-w{display:none}}
 .end-family{display:block;width:100%;max-width:520px;margin:0 auto 10px;border-radius:18px;box-shadow:0 6px 18px rgba(80,60,140,.18)}
 .gate input{width:140px;height:56px;border-radius:16px;border:3px solid var(--purple-l);font:inherit;font-size:28px;text-align:center;background:#fff;color:var(--ink);-webkit-user-select:text;user-select:text}
@@ -408,7 +409,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .stk-how{font-size:11.5px;color:var(--purple-d);text-align:center;line-height:1.25}
 .stk.off .stk-art{filter:grayscale(1);opacity:.35}
 .stk.off .stk-badge{display:none}
-.stk-num{position:relative;width:100%;height:100%}.stk-num b{position:absolute;inset:0;display:grid;place-items:center;font-size:15px;color:var(--ink);padding-top:5px}
+.stk-num{position:relative;width:100%;height:100%}.stk-num.stk-think b{color:#fff;padding:0 0 12%;font-size:14px}.stk-bonus{border-radius:50%;outline:2px dashed var(--purple-l);outline-offset:-2px}.stk-num b{position:absolute;inset:0;display:grid;place-items:center;font-size:15px;color:var(--ink);padding-top:5px}
 .newst{margin:10px auto 0;padding:8px 10px 10px;background:#fff;border-radius:18px;box-shadow:inset 0 0 0 3px var(--gold);max-width:380px}
 .stk-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:6px}
 .newst .stk{animation:popin .45s}
@@ -560,7 +561,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
    ไฟล์เดียว ใช้กับ GitHub Pages + ติดตั้งเป็นแอป (PWA)
    ใส่ภาพ/เสียง/วิดีโอเองได้: วางไฟล์ตามชื่อใน ASSETS / VOICE
    ========================================================= */
-const VERSION='2.4.1';
+const VERSION='2.4.3';
 
 /*ENGINE_START*/
 const MOVES={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]};
@@ -821,6 +822,7 @@ const VOICE_RAW={
   win1:'เก่งมาก ผ่านด่านแล้ว',
   win3:'สุดยอด ได้สามดาวเลย',
   world_done:'ผ่านโลกนี้ครบแล้ว เจ้าหญิงมอบดาวดวงใหญ่ให้เลย',
+  world_done_b:'ผ่านโลกนี้ครบแล้ว เจ้าหญิงมอบดาวดวงใหญ่ให้เลย ถ้าอยากฝึกเพิ่ม มีด่านโบนัสให้ลองนะ',
   break:'วันนี้เล่นเก่งมาก พักสายตากันก่อนนะ',
   ending:'สุดยอดเลย เธอคือนักเวทโค้ดดิ้งตัวจริง',
   ed_help:'แตะเครื่องมือ แล้วแตะช่องบนกระดานเพื่อวาง เสร็จแล้วกดลองเล่นให้ผ่านก่อนนะ',
@@ -905,6 +907,7 @@ const VOICE_RAW_EN={
   win1:'Great job! You passed the level!',
   win3:'Amazing! Three stars!',
   world_done:'You finished this world! The princess gives you a big star!',
+  world_done_b:'You finished this world! The princess gives you a big star! Want more practice? Try the bonus levels.',
   break:'You played so well today. Let’s rest our eyes for a bit.',
   ending:'Amazing! You are a real coding wizard!',
   ed_help:'Tap a tool, then tap a square on the board to place it. When you are done, tap Test Play and win it first.',
@@ -1088,14 +1091,14 @@ const QUIZ={
   '1-9':{t:'predict',p:'UURRRD'},'2-9':{t:'choose',o:['DRRDR','DRRRD','RRDDR']},
   '3-9':{t:'choose',o:['RPDPRD','RPRDPD','RDPRPD']},'4-9':{t:'debug',p:'DRRDL'},
   '5-9':{t:'choose',o:['2(RRDD)R','2(RDRD)R','3(RD)R']},'6-9':{t:'count',p:'4(RI)R',k:0},
-  '7-9':{t:'choose',o:['FF|RPRPR','FFF|RPR','FF|RPRP']},'8-9':{t:'debug',p:'FDFR|3(RI)'}
+  '7-9':{t:'choose',o:['FF|RPRPR','FRF|RPRPR','RFF|RPRPR']},'8-9':{t:'choose',o:['2(FD)|3(RI)','2(FR)|3(RI)','2(DF)|3(RI)']}
 };
 const done=id=>(S.best[id]||0)>0||!!S.skip[id];
 /* เปิดด่านเมื่อผ่านด่านก่อนหน้า · ด่าน 1 ของโลกถัดไปเปิดเมื่อผ่านด่าน 8 (ด่านโบนัส 9–12 ไม่บังคับ)
    ด่านที่อยู่ก่อนด่านไกลสุดที่ผ่านแล้วเปิดทั้งหมด (ด่านที่แทรก/เพิ่มทีหลังจึงไม่ล็อกด่านที่เคยไปถึง) */
 const maxDone=()=>{let m=-1;for(const l of ALL)if(done(l.id))m=l.idx;return m};
 const prevOK=lv=>{if(!lv.idx)return true;if(!lv.li){const p=ALL.find(l=>l.wi===lv.wi-1&&l.li===CORE-1);return !!p&&done(p.id)}return done(ALL[lv.idx-1].id)};
-const unlocked=lv=>S.unlockAll||done(lv.id)||lv.idx<=maxDone()||prevOK(lv);
+const unlocked=lv=>S.unlockAll||done(lv.id)||prevOK(lv)||(!lv.bonus&&lv.idx<=maxDone());
 const nextLv=()=>{let mc=-1;for(const l of ALL)if(!l.bonus&&done(l.id))mc=l.idx;
   return ALL.find(l=>!l.bonus&&l.idx>mc&&!done(l.id))||ALL.find(l=>!done(l.id)&&unlocked(l))||ALL.find(l=>!done(l.id))};
 const coreOf=w=>ALL.filter(l=>l.w===w&&!l.bonus);
@@ -1140,9 +1143,11 @@ function tts(text){if(!('speechSynthesis' in window))return;let vs=[];try{vs=spe
   try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='th-TH';if(thVoice)u.voice=thVoice;u.rate=.92;u.pitch=1.1;speechSynthesis.speak(u)}catch(e){}}
 function voiceBusy(){try{if(curAudio&&!curAudio.paused&&!curAudio.ended)return true;return !!(window.speechSynthesis&&speechSynthesis.speaking)}catch(e){return false}}
 function stopVoice(){try{curAudio&&curAudio.pause()}catch(e){}curAudio=null;try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}}
+/* บทอังกฤษที่ยังไม่ได้อัด: ใช้เสียงอ่านของเครื่องเลย ไม่ต้องลองโหลดไฟล์ */
+const NO_EN_FILE=/^(q_|world_done_b$)/;
 function speak(id){
   if(!S.voice)return;stopVoice();const text=VOICE[id];if(!text)return;const f=voiceDir(S.lang)+voiceFile(id)+'.mp3';
-  if(vok[f]===false||location.protocol==='file:')return tts(text);
+  if(vok[f]===false||location.protocol==='file:'||(isEN()&&NO_EN_FILE.test(id)))return tts(text);
   const a=new Audio(f);curAudio=a;let settled=false;
   a.oncanplaythrough=()=>{if(settled)return;settled=true;vok[f]=true;if(curAudio===a)a.play().catch(()=>tts(text))};
   a.onerror=()=>{if(settled)return;settled=true;vok[f]=false;if(curAudio===a)tts(text)};
@@ -1257,6 +1262,10 @@ function layout(){
 /* แถวเดียว: เลื่อนให้เห็นช่อง + ที่กำลังจะวาง และใส่ขอบจางถ้ามีการ์ดล้น */
 function fitStrips(){
   if(!P)return;const one=$('#panel').classList.contains('onerow');
+  /* แถวประกายติดด้านบนได้เฉพาะเมื่อยังเหลือที่ให้เห็นแถวคาถาหลักอย่างน้อยหนึ่งแถวการ์ด ไม่งั้นแถวหลักจะถูกบังจนแตะไม่ได้ */
+  const pg0=$('#prog'),fs=pg0&&pg0.querySelector('.strip.s-fn');
+  if(pg0){const stick=!!fs&&pg0.clientHeight-fs.offsetHeight>=Math.max(72,(parseFloat(getComputedStyle($('#palette')).getPropertyValue('--cp'))||52)+24);
+    pg0.classList.toggle('nostick',!!fs&&!stick);pg0.style.scrollPaddingTop=stick?fs.offsetHeight+6+'px':''}
   const on=$('#prog .slot.on');if(on&&!P.running)on.scrollIntoView({block:'nearest',inline:'nearest'});
   $$('#prog .strip-cards').forEach(e=>{e.classList.toggle('ovf',one&&e.scrollWidth>e.clientWidth+2);arrows(e);if(!e.dataset.w){e.dataset.w=1;e.addEventListener('scroll',()=>arrows(e),{passive:true})}});
   progCue();const pg=$('#prog');if(pg&&!pg.dataset.cue){pg.dataset.cue=1;pg.addEventListener('scroll',progCue,{passive:true})}
@@ -1284,7 +1293,7 @@ function renderEnts(){
   $('#ents').innerHTML=h;
 }
 function renderHud(){
-  const lv=P.lv,title=lv.custom==='quiz'?tx('คำถามชวนคิด','Think time'):lv.custom==='demo'?tx('ตัวอย่าง','Demo'):lv.custom==='test'?tx('ทดลองเล่น','Test Play'):lv.custom?tx('ด่านของ '+esc(lv.by||'เพื่อน'),lv.by?esc(lv.by)+'’s level':'Friend’s level'):`<i class="lv-w">${lv.bonus?tx('โบนัส','Bonus'):tx('ด่าน','Level')} </i>${lv.id}`;
+  const lv=P.lv,title=lv.custom==='quiz'?tx('คำถามชวนคิด','Think time'):lv.custom==='demo'?tx('ตัวอย่าง','Demo'):lv.custom==='test'?tx('ทดลองเล่น','Test Play'):lv.custom?tx('ด่านของ '+esc(lv.by||'เพื่อน'),lv.by?esc(lv.by)+'’s level':'Friend’s level'):(lv.bonus?`<i class="lv-bw">${tx('โบนัส','Bonus')} </i>`:`<i class="lv-w">${tx('ด่าน','Level')} </i>`)+lv.id;
   $('#lvName').innerHTML=`<b>${title}</b><span>${lv.w.name}</span>`;
   $('#btnHint').hidden=P.fails<2;updateGoal();renderSpeed();
 }
@@ -1399,7 +1408,7 @@ async function runProgram(){
   if(!P||P.won)return;
   if(P.running){if(Date.now()-P.runStart>800)P.abort=true;return}   /* กันแตะเบิ้ลแล้วหยุดเอง */
   ac();P.sel=null;
-  if(!P.prog.main.length){renderProg();return say(VOICE.empty,'empty')}
+  if(!P.prog.main.length){if(P.prog.fn.length){P.target={s:'main',loop:null};P.sel=null}renderProg();const ms=$('#prog .strip.s-main');ms&&ms.scrollIntoView({block:'nearest'});renderCtrls();return say(VOICE.empty,'empty')}
   const emptyLoop=findEmptyLoop();if(emptyLoop){P.target={s:emptyLoop.s,loop:emptyLoop.nd.id};renderProg();return say(VOICE.empty_loop,'empty_loop')}
   if(hasType(P.prog.main,'F')&&!P.prog.fn.length){P.target={s:'fn',loop:null};renderProg();return say(VOICE.empty_fn,'empty_fn')}
   resetRunView();renderProg();calm();
@@ -1488,7 +1497,10 @@ async function finishWin(){
 function openWin(st,n,prev,fresh=[]){
   const lv=P.lv,par=lv.par,next=lv.custom?null:ALL[lv.idx+1],last=!lv.custom&&lv.li===CORE-1,bonusEnd=!lv.custom&&lv.bonus&&(!next||next.wi!==lv.wi);
   const name=(S.name||'').trim();
-  const right=lv.custom?(lv.own?`<button class="btn-gold" data-act="ownedit">${tx('แก้ด่านของฉัน','Edit my level')}${ICON.next}</button>`:`<button class="btn-gold" data-act="make">${tx('สร้างด่านของฉันบ้าง','Make my own level')}${ICON.next}</button>`):bonusEnd?(next?`<button class="btn-gold" data-act="go" data-i="${next.idx}">${tx('ไปโลก'+next.w.name,'Go to '+next.w.name)}${ICON.next}</button>`:`<button class="btn-gold" data-act="map">${tx('แผนที่','Map')}${ICON.next}</button>`)
+  const right=lv.custom?(lv.own?`<button class="btn-gold" data-act="ownedit">${tx('แก้ด่านของฉัน','Edit my level')}${ICON.next}</button>`:`<button class="btn-gold" data-act="make">${tx('สร้างด่านของฉันบ้าง','Make my own level')}${ICON.next}</button>`):bonusEnd?(()=>{const nw=next&&ALL.find(l=>l.w===next.w&&!l.bonus&&!done(l.id)),go=nw||nextLv();
+      return nw?`<button class="btn-gold" data-act="go" data-i="${nw.idx}">${tx('ไปโลก'+nw.w.name,'Go to '+nw.w.name)}${ICON.next}</button>`
+        :go&&!done(go.id)?`<button class="btn-gold" data-act="go" data-i="${go.idx}">${tx('เล่นต่อ','Keep playing')}${ICON.next}</button>`
+        :`<button class="btn-gold" data-act="map">${tx('แผนที่','Map')}${ICON.next}</button>`})()
     :`<button class="btn-gold" data-act="${last?'world':'next'}">${last?tx('ไปต่อ','Go on'):lv.bonus?tx('โบนัสต่อไป','Next bonus'):tx('ด่านต่อไป','Next level')}${ICON.next}</button>`;
   sheet(`<div class="win"><div class="win-title">${st===3?tx('สุดยอด','Amazing'):tx('ผ่านแล้ว','You did it')}${name?(isEN()?', ':' ')+esc(name):''}!</div>
     <div class="big-stars">${[1,2,3].map(i=>`<span class="bs ${i<=st?'on':'off'}" style="--d:${.15+i*.22}s">${A.star()}</span>`).join('')}</div>
@@ -1499,11 +1511,11 @@ function openWin(st,n,prev,fresh=[]){
 }
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function openWorldDone(w){
-  const lv=coreOf(w),got=lv.reduce((s,l)=>s+(S.best[l.id]||0),0),nextW=WORLDS[w.n],first=nextW&&ALL.find(l=>l.w===nextW),bonus=ALL.find(l=>l.w===w&&l.bonus);
+  const lv=coreOf(w),got=lv.reduce((s,l)=>s+(S.best[l.id]||0),0),nextW=WORLDS[w.n],first=nextW&&(ALL.find(l=>l.w===nextW&&!l.bonus&&!done(l.id))||ALL.find(l=>l.w===nextW)),bonus=ALL.find(l=>l.w===w&&l.bonus&&!done(l.id))||ALL.find(l=>l.w===w&&l.bonus);
   sheet(`<div class="wdone"><div class="wd-art"><div>${art('princess',A.princess)}</div><div class="wd-star">${A.star()}</div><div>${heroArt()}</div></div>
     <div class="win-title">${tx(`ผ่านโลก${w.name}แล้ว!`,`You finished ${w.name}!`)}</div><p class="p">${tx(`เจ้าหญิงมอบดาวดวงใหญ่ให้ ได้ ${got} จาก ${lv.length*3} ดาว`,`The princess gives you a big star! You got ${got} of ${lv.length*3} stars.`)}</p>${bonus?`<p class="small">${tx('มีด่านโบนัสอีก 4 ด่าน เล่นตอนไหนก็ได้','There are 4 bonus levels too. Play them any time.')}</p>`:''}
-    <div class="row end"><button class="btn-soft" data-act="map">${tx('แผนที่','Map')}</button>${bonus?`<button class="btn-soft" data-act="go" data-i="${bonus.idx}">${tx('ด่านโบนัส','Bonus levels')}</button>`:''}${nextW?`<button class="btn-gold" data-act="go" data-i="${first.idx}">${tx('ไปโลก'+nextW.name,'Go to '+nextW.name)}${ICON.next}</button>`:`<button class="btn-gold" data-act="ending">${tx('ไปตอนจบ','See the ending')}${ICON.next}</button>`}</div></div>`);
-  speak('world_done');
+    <div class="row end"><button class="btn-soft" data-act="map">${tx('แผนที่','Map')}</button>${bonus?`<button class="btn-soft" data-act="go" data-i="${bonus.idx}">${ICON.star}${tx('ด่านโบนัส','Bonus levels')}</button>`:''}${nextW?`<button class="btn-gold" data-act="go" data-i="${first.idx}">${tx('ไปโลก'+nextW.name,'Go to '+nextW.name)}${ICON.next}</button>`:`<button class="btn-gold" data-act="ending">${tx('ไปตอนจบ','See the ending')}${ICON.next}</button>`}</div></div>`);
+  speak(bonus?'world_done_b':'world_done');
 }
 function openEnding(){
   const show_=()=>{sheet(`<div class="ending">${IMG.family?`<img class="end-family" src="${IMG.family.src}" alt="">`:`<div class="end-art"><div>${art('wizard',A.wizard)}</div><div>${heroArt()}</div><div>${art('princess',A.princess)}</div><div>${petArt()}</div></div>`}
@@ -1805,7 +1817,10 @@ function act(a,el){
     case 'go':closeSheet();startLevel(+el.dataset.i);break;
     case 'map':closeSheet();show('map');renderMap();break;
     case 'ending':openEnding();break;
-    case 'skip':S.skip[P.lv.id]=1;save();closeSheet();startLevel(P.lv.idx+1);break;
+    case 'skip':{const lv=P.lv;S.skip[lv.id]=1;save();closeSheet();
+      if(lv.li===CORE-1){openWorldDone(lv.w);break}
+      const nx=ALL[lv.idx+1];if(lv.bonus&&(!nx||nx.wi!==lv.wi)){const t=(nx&&ALL.find(l=>l.w===nx.w&&!l.bonus&&!done(l.id)))||nextLv();t&&!done(t.id)?startLevel(t.idx):(show('map'),renderMap());break}
+      startLevel(lv.idx+1);break}
     case 'vidend':{const v=$('.vid video');v&&v.pause();closeSheet();const f=tryVideo.after;tryVideo.after=null;f&&f();break}
     case 'gateok':{const i=$('#gateIn');if(i&&+i.value===gateAns){const t=gateThen;gateThen=null;t&&t()}else if(i){i.value='';i.classList.remove('err');void i.offsetWidth;i.classList.add('err');SFX.err()}break}
     case 'brkdone':clearInterval(openBreak.t);S.play.breakUntil=0;S.play.ms=0;save();closeSheet();break;
@@ -1847,14 +1862,18 @@ const lvOf=w=>ALL.filter(l=>l.w===w);
 const STK=[
   {id:'first',get name(){return tx('ก้าวแรก','First Step')},get how(){return tx('ผ่านด่าน 1-1','Pass level 1-1')},ok:()=>(S.best['1-1']||0)>0,art:()=>heroArt(),bg:'#EAF5DA'},
   ...WORLDS.map(w=>({id:'w'+w.n,get name(){return tx('ผ่าน'+w.name,w.name+' cleared')},get how(){return tx('ผ่านด่าน 1–8 ในโลก\u00a0'+w.n,'Pass levels 1–8 in world\u00a0'+w.n)},ok:()=>coreOf(w).every(l=>(S.best[l.id]||0)>0),art:()=>art('wall'+w.n,()=>A.wall(w.n)),bg:WORLD_TILE[w.n][1]})),
-  ...WORLDS.map(w=>({id:'g'+w.n,get name(){return tx('3 ดาว'+w.name,w.name+' 3 stars')},get how(){return tx('ได้ 3 ดาวทุกด่านในโลก\u00a0'+w.n,'Get 3 stars on every level in world\u00a0'+w.n)},gold:true,ok:()=>lvOf(w).every(l=>S.best[l.id]===3),art:()=>art('wall'+w.n,()=>A.wall(w.n)),bg:WORLD_TILE[w.n][0]})),
+  ...WORLDS.map(w=>({id:'g'+w.n,get name(){return tx('3 ดาว'+w.name,w.name+' 3 stars')},get how(){return tx('ได้ 3 ดาวด่าน 1–8 ในโลก\u00a0'+w.n,'Get 3 stars on levels 1–8 in world\u00a0'+w.n)},gold:true,ok:()=>coreOf(w).every(l=>S.best[l.id]===3),art:()=>art('wall'+w.n,()=>A.wall(w.n)),bg:WORLD_TILE[w.n][0]})),
   {id:'s50',get name(){return tx('ดาว 50 ดวง','50 Stars')},get how(){return tx('สะสมดาวให้ได้ 50 ดวง','Collect 50 stars')},ok:()=>totalStars()>=50,art:()=>`<div class="stk-num">${A.star()}<b>50</b></div>`,bg:'#FFF3D6'},
   {id:'s100',get name(){return tx('ดาว 100 ดวง','100 Stars')},get how(){return tx('สะสมดาวให้ได้ 100 ดวง','Collect 100 stars')},gold:true,ok:()=>totalStars()>=100,art:()=>`<div class="stk-num">${A.star()}<b>100</b></div>`,bg:'#FFF3D6'},
   {id:'all',get name(){return tx('นักเวทเต็มขั้น','Master Wizard')},get how(){return tx('ได้ 3 ดาวครบทุกด่าน','Get 3 stars on every level')},gold:true,ok:()=>totalStars()===ALL.length*3,art:()=>art('wizard',A.wizard),bg:'#ECE8F8'},
   {id:'maker',get name(){return tx('นักสร้างด่าน','Level Maker')},get how(){return tx('สร้างด่านเองแล้วเล่นผ่าน','Make a level and win it')},ok:()=>!!S.flags.creator,art:()=>petArt(),bg:'#FCEAF0'},
   {id:'buddy',get name(){return tx('เพื่อนซี้','Best Buddy')},get how(){return tx('เล่นด่านที่เพื่อนส่งมาจนผ่าน','Win a level a friend sent you')},ok:()=>!!S.flags.friend,art:()=>art('princess',A.princess),bg:'#FCEAF0'}
 ];
-STK.push({id:'think',get name(){return tx('นักคิด','Big Thinker')},get how(){return tx('ตอบคำถามชวนคิดถูก 8 ข้อ','Get 8 think questions right')},ok:()=>Object.values(S.quiz||{}).filter(r=>r.ok).length>=8,art:()=>`<div class="stk-num">${ICON.bulb}<b>8</b></div>`,bg:'#FFF3D6'});
+STK.push({id:'think',get name(){return tx('นักคิด','Big Thinker')},get how(){return tx('ตอบคำถามชวนคิดถูก 12 ข้อ','Get 12 think questions right')},ok:()=>Object.values(S.quiz||{}).filter(r=>r.ok).length>=12,art:()=>`<div class="stk-num stk-think">${ICON.bulb}<b>12</b></div>`,bg:'#FFF3D6'});
+/* v2.4.2 สติกเกอร์ด่านโบนัส: ผ่านโบนัสครบ 4 ด่านของโลกไหนก็ได้ · ผ่านโบนัสครบทุกโลก */
+const bonusOf=w=>ALL.filter(l=>l.w===w&&l.bonus),bonusDone=w=>bonusOf(w).every(l=>(S.best[l.id]||0)>0);
+STK.push({id:'bonus1',get name(){return tx('นักล่าโบนัส','Bonus Hunter')},get how(){return tx('ผ่านด่านโบนัสครบ 4 ด่านในโลกไหนก็ได้','Pass all 4 bonus levels in any world')},ok:()=>WORLDS.some(bonusDone),art:()=>`<div class="stk-num stk-bonus">${A.star()}<b>4</b></div>`,bg:'#EFE9FA'},
+  {id:'bonus8',get name(){return tx('แชมป์โบนัส','Bonus Champion')},get how(){return tx('ผ่านด่านโบนัสครบทุกโลก (32 ด่าน)','Pass all 32 bonus levels')},gold:true,ok:()=>WORLDS.every(bonusDone),art:()=>`<div class="stk-num stk-bonus">${A.star()}<b>32</b></div>`,bg:'#E3DAF6'});
 function awardStickers(){const fresh=[];for(const s of STK)if(!S.stickers[s.id]&&s.ok()){S.stickers[s.id]=Date.now();fresh.push(s)}return fresh}
 function stkHTML(s,got,how,i=0){return `<div class="stk ${s.gold?'gold':''} ${got?'':'off'}" style="--bg:${s.bg};--r:${(i%5-2)*2}deg"><div class="stk-art">${s.art()}</div>${s.gold?`<div class="stk-badge">${ICON.star}</div>`:''}<div class="stk-name">${got?s.name:tx('ยังไม่ได้','Not yet')}</div>${!got&&how?`<div class="stk-how">${s.how}</div>`:''}</div>`}
 function stkNew(list){return list.length?`<div class="newst"><div class="small">${tx('ได้สติกเกอร์ใหม่!','New sticker!')}</div><div class="stk-row">${list.map((s,i)=>stkHTML(s,true,false,i)).join('')}</div></div>`:''}
