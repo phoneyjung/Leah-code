@@ -340,7 +340,10 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .wd-art .wd-star{width:22%;animation:float 2.4s ease-in-out infinite}
 .nw{white-space:nowrap}
 @media (orientation:landscape) and (max-height:420px){.home-art{flex:0 0 50%!important;padding-top:50px;box-sizing:border-box}.home-tools{flex-wrap:nowrap!important;gap:6px!important}.home-tools .chip{padding:4px 9px!important;font-size:13px!important;white-space:nowrap}}
-.lv-w,.lv-bw{font-style:normal}
+.lv-w{font-style:normal}
+/* ด่านโบนัสบนจอแคบ: ซ่อนคำว่าโบนัส ใช้ดาวเล็กหน้าเลขด่านแทน (เลขด่านไม่ถูกตัด) */
+.lv-bstar{display:none;font-style:normal}.lv-bstar svg{display:inline-block;width:16px;height:16px;vertical-align:-2px;margin-right:3px}
+@media (max-width:400px){.lv-bstar{display:inline}}
 @media (max-width:400px){.lv-w{display:none}}
 .end-family{display:block;width:100%;max-width:520px;margin:0 auto 10px;border-radius:18px;box-shadow:0 6px 18px rgba(80,60,140,.18)}
 .gate input{width:140px;height:56px;border-radius:16px;border:3px solid var(--purple-l);font:inherit;font-size:28px;text-align:center;background:#fff;color:var(--ink);-webkit-user-select:text;user-select:text}
@@ -561,7 +564,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
    ไฟล์เดียว ใช้กับ GitHub Pages + ติดตั้งเป็นแอป (PWA)
    ใส่ภาพ/เสียง/วิดีโอเองได้: วางไฟล์ตามชื่อใน ASSETS / VOICE
    ========================================================= */
-const VERSION='2.4.3';
+const VERSION='2.4.4';
 
 /*ENGINE_START*/
 const MOVES={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]};
@@ -1293,8 +1296,8 @@ function renderEnts(){
   $('#ents').innerHTML=h;
 }
 function renderHud(){
-  const lv=P.lv,title=lv.custom==='quiz'?tx('คำถามชวนคิด','Think time'):lv.custom==='demo'?tx('ตัวอย่าง','Demo'):lv.custom==='test'?tx('ทดลองเล่น','Test Play'):lv.custom?tx('ด่านของ '+esc(lv.by||'เพื่อน'),lv.by?esc(lv.by)+'’s level':'Friend’s level'):(lv.bonus?`<i class="lv-bw">${tx('โบนัส','Bonus')} </i>`:`<i class="lv-w">${tx('ด่าน','Level')} </i>`)+lv.id;
-  $('#lvName').innerHTML=`<b>${title}</b><span>${lv.w.name}</span>`;
+  const lv=P.lv,title=lv.custom==='quiz'?tx('คำถามชวนคิด','Think time'):lv.custom==='demo'?tx('ตัวอย่าง','Demo'):lv.custom==='test'?tx('ทดลองเล่น','Test Play'):lv.custom?tx('ด่านของ '+esc(lv.by||'เพื่อน'),lv.by?esc(lv.by)+'’s level':'Friend’s level'):`<i class="lv-w">${lv.bonus?tx('โบนัส','Bonus'):tx('ด่าน','Level')} </i>${lv.bonus?`<i class="lv-bstar" aria-hidden="true">${ICON.star}</i>`:''}${lv.id}`;
+  $('#lvName').innerHTML=`<b>${title}</b><span>${lv.w.name}</span>`;$('#lvName').setAttribute('aria-label',(lv.bonus&&!lv.custom?tx('ด่านโบนัส ','Bonus level ')+lv.id+' · ':'')+tx('ฟังโจทย์อีกครั้ง','Hear the task again'));
   $('#btnHint').hidden=P.fails<2;updateGoal();renderSpeed();
 }
 function updateGoal(){
@@ -1362,7 +1365,7 @@ function addCard(t){
       snap();L.nd.t=t;SFX.tap();afterEdit(L.nd.id);return}}
   const tg=P.target;
   if(t==='loop'&&tg.loop){renderProg();return warnSay('no_nest')}
-  if(t==='F'&&tg.s==='fn'){renderProg();return warnSay('no_fn_in_fn')}
+  if(t==='F'&&tg.s==='fn'){P.target={s:'main',loop:null};renderProg();const ms=$('#prog .strip.s-main');ms&&ms.scrollIntoView({block:'nearest'});return warnSay('no_fn_in_fn')}
   if(countProg(P.prog)>=40){renderProg();return warnSay(P.lv.cards.includes('loop')?'too_many':'too_many2')}
   snap();
   const nd={id:'n'+(++P.uid),t};if(t==='loop'){nd.n=2;nd.body=[]}
@@ -1511,11 +1514,11 @@ function openWin(st,n,prev,fresh=[]){
 }
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function openWorldDone(w){
-  const lv=coreOf(w),got=lv.reduce((s,l)=>s+(S.best[l.id]||0),0),nextW=WORLDS[w.n],first=nextW&&(ALL.find(l=>l.w===nextW&&!l.bonus&&!done(l.id))||ALL.find(l=>l.w===nextW)),bonus=ALL.find(l=>l.w===w&&l.bonus&&!done(l.id))||ALL.find(l=>l.w===w&&l.bonus);
+  const skipped=coreOf(w).some(l=>S.skip[l.id]&&!(S.best[l.id]>0)),lv=coreOf(w),got=lv.reduce((s,l)=>s+(S.best[l.id]||0),0),nextW=WORLDS[w.n],first=nextW&&(ALL.find(l=>l.w===nextW&&!l.bonus&&!done(l.id))||ALL.find(l=>l.w===nextW)),bonus=ALL.find(l=>l.w===w&&l.bonus&&!done(l.id))||ALL.find(l=>l.w===w&&l.bonus);
   sheet(`<div class="wdone"><div class="wd-art"><div>${art('princess',A.princess)}</div><div class="wd-star">${A.star()}</div><div>${heroArt()}</div></div>
-    <div class="win-title">${tx(`ผ่านโลก${w.name}แล้ว!`,`You finished ${w.name}!`)}</div><p class="p">${tx(`เจ้าหญิงมอบดาวดวงใหญ่ให้ ได้ ${got} จาก ${lv.length*3} ดาว`,`The princess gives you a big star! You got ${got} of ${lv.length*3} stars.`)}</p>${bonus?`<p class="small">${tx('มีด่านโบนัสอีก 4 ด่าน เล่นตอนไหนก็ได้','There are 4 bonus levels too. Play them any time.')}</p>`:''}
+    <div class="win-title">${skipped?tx('ไปโลกต่อไปได้แล้ว','On to the next world'):tx(`ผ่านโลก${w.name}แล้ว!`,`You finished ${w.name}!`)}</div><p class="p">${skipped?tx(`ได้ ${got} จาก ${lv.length*3} ดาว ด่านที่ข้ามกลับมาเล่นได้นะ`,`${got} of ${lv.length*3} stars. Skipped levels can wait.`):tx(`เจ้าหญิงมอบดาวดวงใหญ่ให้ ได้ ${got} จาก ${lv.length*3} ดาว`,`The princess gives you a big star! You got ${got} of ${lv.length*3} stars.`)}</p>${bonus?`<p class="small">${tx('มีด่านโบนัสอีก 4 ด่าน เล่นตอนไหนก็ได้','There are 4 bonus levels too. Play them any time.')}</p>`:''}
     <div class="row end"><button class="btn-soft" data-act="map">${tx('แผนที่','Map')}</button>${bonus?`<button class="btn-soft" data-act="go" data-i="${bonus.idx}">${ICON.star}${tx('ด่านโบนัส','Bonus levels')}</button>`:''}${nextW?`<button class="btn-gold" data-act="go" data-i="${first.idx}">${tx('ไปโลก'+nextW.name,'Go to '+nextW.name)}${ICON.next}</button>`:`<button class="btn-gold" data-act="ending">${tx('ไปตอนจบ','See the ending')}${ICON.next}</button>`}</div></div>`);
-  speak(bonus?'world_done_b':'world_done');
+  if(!skipped)speak(bonus?'world_done_b':'world_done');
 }
 function openEnding(){
   const show_=()=>{sheet(`<div class="ending">${IMG.family?`<img class="end-family" src="${IMG.family.src}" alt="">`:`<div class="end-art"><div>${art('wizard',A.wizard)}</div><div>${heroArt()}</div><div>${art('princess',A.princess)}</div><div>${petArt()}</div></div>`}
