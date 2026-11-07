@@ -102,7 +102,7 @@ svg{display:block}
 .w-idea{font-size:14px;color:var(--purple-d)}
 .w-stars{display:flex;align-items:center;gap:4px;font-size:15px;color:var(--purple-d)}
 .w-stars svg{width:18px;height:18px}
-.w-lvls{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.w-lvls{display:grid;grid-template-columns:repeat(4,58px);gap:8px;margin-top:10px}
 .lv{width:58px;height:64px;border-radius:18px;background:var(--purple-ll);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--purple-dd);box-shadow:0 4px 0 var(--purple-l)}
 .lv:active{transform:translateY(3px);box-shadow:0 1px 0 var(--purple-l)}
 .lv-n{font-size:21px;line-height:1}
@@ -262,6 +262,10 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 @container (max-width:520px){.g-unit{display:none}html[lang=en] .lv-name b{font-size:15px}}
 .world{container-type:inline-size}
 @container (max-width:380px){html[lang=en] .w-name{font-size:17px}}
+/* ปุ่มด่านโลกละ 12: แถวละ 4 (3 แถว) · จอกว้างแถวละ 6 (2 แถว) · กว้างมากแถวเดียว ไม่ให้เหลือเศษแถวสุดท้าย */
+@container (max-width:255px){.w-lvls{grid-template-columns:repeat(3,58px)}}
+@container (min-width:388px){.w-lvls{grid-template-columns:repeat(6,58px)}}
+@container (min-width:788px){.w-lvls{grid-template-columns:repeat(12,58px)}}
 .seg.lang button{min-width:72px}
 /* หน้าต่างซ้อน */
 .ov{position:fixed;inset:0;background:#3d2c5a73;display:grid;place-items:center;z-index:50;padding:calc(12px + var(--st)) 12px calc(12px + var(--sb))}
@@ -551,7 +555,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
    ไฟล์เดียว ใช้กับ GitHub Pages + ติดตั้งเป็นแอป (PWA)
    ใส่ภาพ/เสียง/วิดีโอเองได้: วางไฟล์ตามชื่อใน ASSETS / VOICE
    ========================================================= */
-const VERSION='2.3.1';
+const VERSION='2.4.0';
 
 /*ENGINE_START*/
 const MOVES={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]};
@@ -632,7 +636,11 @@ const WORLDS=[
   {map:['..C','...','H..'],sol:'UURR'},
   {map:['....','H#C.','....'],sol:'URRD'},
   {map:['H...','##.#','C...'],sol:'RRDDLL'},
-  {map:['C#..','.#..','...H'],sol:'LLLUU'}]},
+  {map:['C#..','.#..','...H'],sol:'LLLUU'},
+  {map:['....','.##.','H##C','....'],sol:'DRRRU'},
+  {map:['H.#C','..#.','....'],sol:'DDRRRUU'},
+  {map:['H..#C','.#.#.','.#...'],sol:'RRDDRRUU'},
+  {map:['H#...','.#.#.','...#C'],sol:'DDRRUURRDD'}]},
 {n:2,name:'สะพานรุ้ง',idea:'วางแผนก่อนเดิน',age:'5+',cards:['U','D','L','R'],levels:[
   {map:['....','H..C'],sol:'RRR'},
   {map:['C..','...','..H'],sol:'UULL'},
@@ -641,7 +649,11 @@ const WORLDS=[
   {map:['..#C','..#.','H...'],sol:'RRRUU'},
   {map:['...C','.#..','H#..'],sol:'UURRR'},
   {map:['H#C','.#.','...'],sol:'DDRRUU'},
-  {map:['C...','###.','H...'],sol:'RRRUULLL'}]},
+  {map:['C...','###.','H...'],sol:'RRRUULLL'},
+  {map:['H#..','...#','#..C'],sol:'DRRDR'},
+  {map:['....C','.###.','.#...','H#...'],sol:'UUURRRR'},
+  {map:['H.#..','.#..C','...#.'],sol:'DDRRURR'},
+  {map:['C...#','###.#','....#','H#...'],sol:'URRRUULLL'}]},
 {n:3,name:'ป่าเห็ด',idea:'เก็บดาว',age:'6+',cards:['U','D','L','R','P'],levels:[
   {map:['...','H*C','...'],sol:'RPR'},
   {map:['....','H*.C','....'],sol:'RPRR'},
@@ -650,7 +662,11 @@ const WORLDS=[
   {map:['H*.','...','.*C'],sol:'RPDDPR'},
   {map:['H#C','.#.','*..'],sol:'DDPRRUU'},
   {map:['H*..','##*.','...C'],sol:'RPRDPDR'},
-  {map:['***','.#.','H.C'],sol:'UUPRPRPDD'}]},
+  {map:['***','.#.','H.C'],sol:'UUPRPRPDD'},
+  {map:['H*.','.*.','..C'],sol:'RPDPRD'},
+  {map:['.*.C','.*..','H*..'],sol:'RPUPUPRR'},
+  {map:['H.*','.#*','C.*'],sol:'RRPDPDPLL'},
+  {map:['*...*','.###.','H...C'],sol:'UUPRRRRPDD'}]},
 {n:4,name:'บ้านพ่อมด',idea:'หาการ์ดที่ผิด (ดีบัก)',age:'6+',cards:['U','D','L','R','P'],levels:[
   {map:['...','H.C'],sol:'RR',start:'RD'},
   {map:['....','H..C'],sol:'RRR',start:'RRD'},
@@ -659,7 +675,11 @@ const WORLDS=[
   {map:['C..','#..','H..'],sol:'RUUL',start:'RULL'},
   {map:['H*.','...','.*C'],sol:'RPDDPR',start:'RPDDDR'},
   {map:['H#C','.#.','...'],sol:'DDRRUU',start:'DDRUUU'},
-  {map:['H*..','##*.','...C'],sol:'RPRDPDR',start:'RPRUPDD'}]},
+  {map:['H*..','##*.','...C'],sol:'RPRDPDR',start:'RPRUPDD'},
+  {map:['H*.','.*.','..C'],sol:'RPDPRD',start:'RPDPRR'},
+  {map:['.*.C','.*..','H*..'],sol:'RPUPUPRR',start:'RPUPPPRR'},
+  {map:['H.*','.#*','C.*'],sol:'RRPDPDPLL',start:'RDPDPDPRL'},
+  {map:['*...*','.###.','H...C'],sol:'UUPRRRRPDD',start:'UUPRRRDPDL'}]},
 {n:5,name:'ถ้ำคริสตัล',idea:'ทำซ้ำ (ลูป)',age:'6+',cards:['U','D','L','R','P','loop'],levels:[
   {map:['......','H....C','......'],sol:'5(R)'},
   {map:['.C.','...','...','...','.H.'],sol:'4(U)'},
@@ -668,7 +688,11 @@ const WORLDS=[
   {map:['H...','#...','##..','###C'],sol:'3(RD)'},
   {map:['####C','###..','##..#','#..##','H.###'],sol:'4(RU)'},
   {map:['####C','###*.','##*.#','#*.##','H.###'],sol:'3(RUP)RU'},
-  {map:['C.....','#####.','H.....'],sol:'5(R)2(U)5(L)'}]},
+  {map:['C.....','#####.','H.....'],sol:'5(R)2(U)5(L)'},
+  {map:['H..###','##.###','##...#','####.#','####.C'],sol:'2(RRDD)R'},
+  {map:['H....','.*...','..*..','...*.','....C'],sol:'3(RDP)RD'},
+  {map:['H****','....*','....*','....C'],sol:'4(RP)2(DP)D'},
+  {map:['C****.','#####.','H.....'],sol:'5(R)2(U)4(LP)L'}]},
 {n:6,name:'ทะเลสาบ',idea:'ถ้า…ก็… (เงื่อนไข)',age:'7+',cards:['U','D','L','R','P','I','loop'],levels:[
   {map:['...','H?C','...'],sol:'RIR'},
   {map:['....','H?.C','....'],sol:'RIRR'},
@@ -677,7 +701,11 @@ const WORLDS=[
   {map:['.....','H*??C','.....'],sol:'RP2(RI)R'},
   {map:['C??.','###.','H...'],sol:'3(R)2(U)3(LI)'},
   {map:['####C','###.?','##.?#','#.?##','H?###'],sol:'4(RIU)'},
-  {map:['H????','####?','C????'],sol:'4(RI)2(DI)4(LI)'}]},
+  {map:['H????','####?','C????'],sol:'4(RI)2(DI)4(LI)'},
+  {map:['......','H*?*?C','......'],sol:'4(RI)R'},
+  {map:['H...','?...','?...','???C'],sol:'3(DI)3(RI)'},
+  {map:['H?###','#??##','##??#','###?C'],sol:'3(RIDI)R'},
+  {map:['H.....C','#?#?#?#'],sol:'3(RDIUR)'}]},
 {n:7,name:'หอคอยดาว',idea:'คาถาของฉัน (ฟังก์ชัน)',age:'8+',cards:['U','D','L','R','P','F'],levels:[
   {map:['.....','H***C','.....'],sol:'FFFR|RP'},
   {map:['H*.*.*C'],sol:'FFF|RPR'},
@@ -686,7 +714,11 @@ const WORLDS=[
   {map:['H*###','#.*##','##.*#','###.C'],sol:'FFFR|RPD'},
   {map:['....C','...*.','..*..','.*...','H....'],sol:'FFFRU|RUP'},
   {map:['H....C','#****#'],sol:'FFFFR|RDPU'},
-  {map:['H?###','#.?##','##.?#','###.C'],sol:'FFFR|RID',cards:['U','D','L','R','P','I','F']}]},
+  {map:['H?###','#.?##','##.?#','###.C'],sol:'FFFR|RID',cards:['U','D','L','R','P','I','F']},
+  {map:['H**.**C'],sol:'FF|RPRPR'},
+  {map:['###.**C','###.###','H**.###'],sol:'FUUF|RPRPR'},
+  {map:['H*#####','#*.*###','###*.*#','#####*C'],sol:'FFF|RPDPR'},
+  {map:['#*#*#*#','#*#*#*#','H.....C'],sol:'FFF|RUPUPDDR'}]},
 {n:8,name:'ปราสาท',idea:'รวมพลังทุกการ์ด',age:'9+',cards:['U','D','L','R','P','I','loop','F'],levels:[
   {map:['H?????C','.......'],sol:'5(RI)R'},
   {map:['H*?*?C','......'],sol:'2(RPRI)R'},
@@ -695,7 +727,11 @@ const WORLDS=[
   {map:['*....*','.####.','.####.','.####.','.####.','H####C'],sol:'5(U)P5(R)P5(D)'},
   {map:['###.??C','###.###','H???###'],sol:'FUUF|3(RI)',demo:'d8b'},
   {map:['#?#?#?#','H.....C','#?#?#?#'],sol:'3(RUIDDIUR)'},
-  {map:['??????','?####?','?####?','?####?','?####?','H####C'],sol:'5(UI)5(RI)5(DI)'}]}
+  {map:['??????','?####?','?####?','?####?','?####?','H####C'],sol:'5(UI)5(RI)5(DI)'},
+  {map:['H???###','###.???','######C'],sol:'2(FD)|3(RI)'},
+  {map:['H??##','##?##','##???','####?','####C'],sol:'2(F)|2(RI)2(DI)'},
+  {map:['H?*?*?','*?*?*.','.?*?*?','C*?*?.'],sol:'FF|5(RI)D5(LI)D'},
+  {map:['?.?.?.#','?*?*?*#','H?.?.?C'],sol:'3(F)|2(UI)R2(DI)R'}]}
 ];
 /*ENGINE_END*/
 
@@ -1048,7 +1084,7 @@ const done=id=>(S.best[id]||0)>0||!!S.skip[id];
 const maxDone=()=>{let m=-1;for(const l of ALL)if(done(l.id))m=l.idx;return m};
 const unlocked=lv=>S.unlockAll||lv.idx<=maxDone()+1;
 const nextLv=()=>{const md=maxDone();return ALL.find(l=>l.idx>md&&!done(l.id))||ALL.find(l=>!done(l.id))};
-/* v2: ทุกโลกมี 8 ด่าน ย้ายดาว/สถิติของด่านเดิมไปที่เลขด่านใหม่ */
+/* v2: ทุกโลกมี 8 ด่าน ย้ายดาว/สถิติของด่านเดิมไปที่เลขด่านใหม่ (v2.4 เพิ่มด่าน 9–12 ต่อท้ายทุกโลก เลขด่านเดิมไม่เปลี่ยน จึงไม่ต้องย้ายอีก) */
 const LV_MIGRATE={1:[1,2,5,6,7],2:[1,3,5,6,7,8],3:[2,4,5,6,7,8],4:[2,3,6,7,8],5:[1,3,4,6,7,8],6:[1,3,6,7,8],7:[1,5,7,8],8:[3,5,7,8]};
 function migrateIds(o){const n={};for(const id in o||{}){const [w,l]=id.split('-').map(Number),t=LV_MIGRATE[w];if(t&&t[l-1])n[w+'-'+t[l-1]]=o[id]}return n}
 if(S.lvv!==2){for(const k of ['best','skip','tries','drafts','stat'])S[k]=migrateIds(S[k]);S.lvv=2;save()}
@@ -1764,7 +1800,7 @@ function act(a,el){
     case 'export':{const code=btoa(unescape(encodeURIComponent(JSON.stringify({v:2,b:S.best,s:S.skip,n:S.name,a:S.ava,p:S.pet,e:S.seen}))));
       (navigator.clipboard?navigator.clipboard.writeText(code):Promise.reject()).then(()=>toast(tx('คัดลอกรหัสแล้ว','Code copied')),()=>window.prompt(tx('คัดลอกรหัสนี้','Copy this code'),code));break}
     case 'import':{const code=window.prompt(tx('วางรหัสความคืบหน้า','Paste your progress code'));if(!code)break;try{const o=JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
-      const okMap=(m,vals)=>m&&typeof m==='object'&&!Array.isArray(m)&&Object.entries(m).every(([k,v])=>/^[1-8]-\d$/.test(k)&&vals.includes(v));
+      const okMap=(m,vals)=>m&&typeof m==='object'&&!Array.isArray(m)&&Object.entries(m).every(([k,v])=>/^[1-8]-(1[0-2]|[1-9])$/.test(k)&&vals.includes(v));
       if(!o||!okMap(o.b,[1,2,3])||(o.s&&!okMap(o.s,[1])))throw new Error('bad');
       if(!window.confirm(tx('แทนความคืบหน้าในเครื่องนี้ด้วยรหัสนี้?','Replace the progress on this device with this code?')))break;S.best=o.v===2?o.b:migrateIds(o.b);S.skip=o.v===2?(o.s||{}):migrateIds(o.s);S.seen=o.e&&typeof o.e==='object'?o.e:{};if(o.n)S.name=o.n;if(o.a)S.ava=o.a;if(o.p&&Object.prototype.hasOwnProperty.call(PETS,o.p))S.pet=o.p;applyPet();save();toast(tx('ใส่รหัสเรียบร้อย','Code added'));openParent();renderHome()}catch(e){toast(tx('รหัสไม่ถูกต้อง','That code doesn’t work'))}break}
     case 'reset':if(window.confirm(tx('ล้างดาวและด่านที่ผ่านทั้งหมด?','Clear all stars and finished levels?'))){S.best={};S.skip={};S.seen={};S.tries={};S.stat={};S.drafts={};S.stickers={};S.flags={};S.friend={};save();toast(tx('ล้างแล้ว','Cleared'));openParent();renderHome()}break;
