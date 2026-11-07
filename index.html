@@ -294,6 +294,34 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
 .hint .g-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;margin:8px 0}
 .g-row .card{--cs:36px;box-shadow:0 3px 0 var(--purple-dd)}
 .g-row b{font-size:15px;color:var(--purple-d)}
+.qpanel{display:none}
+#play.quiz .qpanel{display:flex;flex-direction:column;gap:8px;flex:0 0 auto}
+#play.quiz.qc .qpanel{flex:1 1 auto;min-height:0;overflow-y:auto}
+#play.quiz #palette,#play.quiz .ctrls,#play.quiz #goal,#play.quiz #btnHint,#play.quiz #btnHelp,#play.quiz #prog .slot,#play.quiz.qc #prog{display:none!important}
+#play.quiz #prog{flex:0 1 auto}
+.q-ask{font-size:16px;font-weight:700;color:var(--purple-d);text-align:center;margin:2px 0;line-height:1.3}
+.q-ch{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.q-num{min-width:62px;height:62px;padding:0 10px;border-radius:31px;font-size:26px;font-weight:800;background:#fff;color:var(--purple-d);border:3px solid var(--purple);box-shadow:0 4px 0 var(--purple-dd)}
+.q-opt{display:flex;align-items:center;gap:8px;width:100%;padding:7px 9px;border-radius:16px;background:#fff;border:3px solid var(--purple-l);box-shadow:0 3px 0 var(--purple-ll);text-align:left;flex:0 0 auto}
+.q-opt .q-badge{flex:0 0 auto;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--purple);color:#fff;font-weight:800;font-size:17px}
+.q-opt .g-row,.q-fn .g-row{margin:0;display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.q-fn{display:flex;align-items:center;gap:6px;justify-content:center;flex-wrap:wrap;font-size:14px;color:var(--purple-d)}
+.q-fn svg{width:20px;height:20px}
+.q-ok{border-color:var(--gold)!important;background:#FFF3D6!important;box-shadow:0 0 0 3px var(--gold),0 4px 0 var(--gold-d)!important}
+.q-bad{opacity:.4;animation:shake .45s}
+.card.q-bad{opacity:.55;background:var(--peach)!important;box-shadow:0 4px 0 #D9614F!important}
+.q-foot{display:flex;gap:8px;justify-content:space-between;align-items:center;min-height:44px}
+.q-foot .btn-gold{padding:10px 20px;font-size:18px}
+.panel.qtight .q-ask:not(.q-res){display:none}
+.panel.qtight .q-num{min-width:50px;height:50px;font-size:22px}
+.panel.qtight .q-opt{padding:4px 7px;gap:6px}.panel.qtight .q-opt .card,.panel.qtight .q-fn .card{--cs:30px}.panel.qtight .q-opt .q-badge{width:28px;height:28px;font-size:15px}
+.panel.qtight .q-foot{min-height:36px}
+.ent.qm{z-index:5;display:grid;place-items:center}
+.ent.qm.corner{place-items:start end}.ent.qm.corner>button{width:46%;height:46%;margin:3%;font-size:calc(var(--c) * .24)}
+.ent.qm.q-ok{z-index:2;background:none!important;box-shadow:none!important}
+.ent.qm>button{pointer-events:auto;width:60%;height:60%;border-radius:50%;background:#fff;border:3px solid var(--purple);color:var(--purple-d);font-weight:800;font-size:calc(var(--c) * .3);box-shadow:0 3px 0 var(--purple-dd);animation:breathe 1.4s ease-in-out infinite;display:grid;place-items:center}
+.ent.qm.q-ok>button{width:84%;height:84%;background:#FFF3D6;border-color:var(--gold);color:var(--gold-d);animation:none;box-shadow:0 0 0 3px #fff}
+.ent.qm.q-bad>button{background:var(--peach);color:#fff;border-color:#fff;animation:shake .45s}
 .g-loop{display:inline-flex;align-items:center;gap:4px;border:2px solid var(--purple-d);border-radius:12px;padding:2px 5px;background:var(--purple-ll)}
 .g-n{font-size:14px;color:var(--purple-dd)}
 .g-more{font-size:22px;color:var(--purple-d)}
@@ -486,6 +514,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
       <button class="btn-gold runbtn" id="btnRun"></button>
       <div class="step-note" id="stepNote" hidden data-t="step_note">แตะลูกศร<br>แล้วจะเดินทันที</div>
     </div>
+    <div class="qpanel" id="qpanel"></div>
   </div>
 </section>
 
@@ -522,7 +551,7 @@ img.px{image-rendering:pixelated;image-rendering:crisp-edges}
    ไฟล์เดียว ใช้กับ GitHub Pages + ติดตั้งเป็นแอป (PWA)
    ใส่ภาพ/เสียง/วิดีโอเองได้: วางไฟล์ตามชื่อใน ASSETS / VOICE
    ========================================================= */
-const VERSION='2.2.3';
+const VERSION='2.3.0';
 
 /*ENGINE_START*/
 const MOVES={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]};
@@ -793,7 +822,15 @@ const VOICE_RAW={
   too_many:'การ์ดเยอะเกินไปแล้ว ลองใช้ทำซ้ำดูนะ',
   too_many2:'การ์ดเยอะเกินไปแล้ว ลองเริ่มใหม่นะ',
   no_undo:'ย้อนต่อไม่ได้แล้ว',
-  not_reached_loop:'ยังไม่ถึงน้อง{pet}เลย ลองเพิ่มรอบหรือเพิ่มการ์ดดูนะ'
+  not_reached_loop:'ยังไม่ถึงน้อง{pet}เลย ลองเพิ่มรอบหรือเพิ่มการ์ดดูนะ',
+  q_predict:'คำถามชวนคิด! ถ้าทำตามการ์ดพวกนี้ ตัวเราจะไปหยุดที่เลขไหน แตะเลขที่คิดว่าใช่นะ',
+  q_choose:'คำถามชวนคิด! คาถาไหนพาไปหาน้อง{pet}ได้ แตะเลือกเลย',
+  q_choose_rand:'คำถามชวนคิด! ดาวโผล่ไม่ซ้ำที่ คาถาไหนใช้ได้ทุกครั้ง แตะเลือกเลย',
+  q_debug:'คำถามชวนคิด! คาถานี้มีการ์ดผิดอยู่หนึ่งใบ ใบไหนนะ แตะการ์ดที่ผิดเลย',
+  q_count:'คำถามชวนคิด! วงนี้ต้องทำซ้ำกี่รอบ ถึงจะไปถึงน้อง{pet} แตะตัวเลขเลย',
+  q_right:'ถูกต้อง! คิดเก่งมาก มาร่ายดูกัน',
+  q_wrong:'ยังไม่ใช่ ลองคิดดูอีกทีนะ',
+  q_show:'ไม่เป็นไร มาดูคำตอบด้วยกันนะ'
 };
 /* English voice — same keys as VOICE_RAW, files in audio/en/ */
 const VOICE_RAW_EN={
@@ -869,7 +906,15 @@ const VOICE_RAW_EN={
   too_many:'Too many cards! Try the repeat card.',
   too_many2:'Too many cards! Try starting again.',
   no_undo:'Nothing more to undo.',
-  not_reached_loop:'You haven’t reached {pet} yet. Try more turns or more cards.'
+  not_reached_loop:'You haven’t reached {pet} yet. Try more turns or more cards.',
+  q_predict:'Think time! If you follow these cards, which number will you stop on? Tap the one you think is right.',
+  q_choose:'Think time! Which spell takes you to {pet}? Tap to choose.',
+  q_choose_rand:'Think time! Stars pop up in different places. Which spell works every time? Tap to choose.',
+  q_debug:'Think time! One card in this spell is wrong. Which one? Tap the wrong card.',
+  q_count:'Think time! How many turns does this loop need to reach {pet}? Tap a number.',
+  q_right:'That’s right! Great thinking. Let’s cast it and see.',
+  q_wrong:'Not quite. Have another think.',
+  q_show:'That’s okay. Let’s look at the answer together.'
 };
 /* น้องหมาที่บ้านลีอา — เลือกได้ที่หน้าแรก */
 const PETS={kim:{name:'คิม',en:'Kim'},dukdik:{name:'ดุ๊กดิ๊ก',en:'Dukdik'}};
@@ -967,7 +1012,7 @@ const ICON={
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const KEY='leahcode.v1';
-const DEF={name:'',ava:'girl',pet:'kim',best:{},skip:{},seen:{},tries:{},stat:{},drafts:{},mine:[],friend:{},stickers:{},flags:{},edDraft:null,unlockAll:false,limit:20,fast:false,voice:true,sfx:true,
+const DEF={name:'',ava:'girl',pet:'kim',best:{},skip:{},seen:{},tries:{},stat:{},drafts:{},mine:[],friend:{},stickers:{},flags:{},quiz:{},quizOn:true,edDraft:null,unlockAll:false,limit:20,fast:false,voice:true,sfx:true,
   play:{ms:0,last:0,breakUntil:0},today:{d:'',ms:0}};
 const HAD_SAVE=(()=>{try{return !!localStorage.getItem(KEY)}catch(e){return false}})();
 let S=(()=>{try{const s=JSON.parse(localStorage.getItem(KEY)||'null');return Object.assign(JSON.parse(JSON.stringify(DEF)),s||{})}catch(e){return JSON.parse(JSON.stringify(DEF))}})();
@@ -985,6 +1030,19 @@ WORLDS.forEach((w,wi)=>w.levels.forEach((lv,li)=>{
   lv.par=countProg(lv.solP);lv.cards=lv.cards||w.cards;
   lv.kind=w.step?'step':lv.start?'debug':lv.m.rand.length?'random':lv.m.stars.size?'collect':'go';ALL.push(lv);
 }));
+/* ---------- คำถามชวนคิด: โผล่หลังผ่านด่าน 3 และ 6 ของทุกโลก (ทายก่อน แล้วร่ายดูผลจริง) ----------
+   ใช้แผนที่ของด่านนั้น · predict ทายว่าไปหยุดเลขไหน · choose คาถาไหนใช้ได้ (ข้อที่ผ่านต้องมีข้อเดียว)
+   debug การ์ดใบไหนผิด (ใบไหนเปลี่ยนแล้วผ่านก็นับว่าถูก) · count วงที่ k ในคาถาหลักต้องทำซ้ำกี่รอบ */
+const QUIZ={
+  '1-3':{t:'predict',p:'UUL'},'1-6':{t:'predict',p:'DRR'},
+  '2-3':{t:'choose',o:['RRRUU','RRUUU','URRR']},'2-6':{t:'predict',p:'UURR'},
+  '3-3':{t:'choose',o:['RPRPR','RRPR','RPRRP']},'3-6':{t:'choose',o:['DDPRRUU','DDRRUU','DPDRRUU']},
+  '4-3':{t:'debug',p:'UURD'},'4-6':{t:'debug',p:'RPDRPR'},
+  '5-3':{t:'count',p:'3(U)4(R)',k:0},'5-6':{t:'count',p:'4(RU)',k:0},
+  '6-3':{t:'choose',o:['4(RI)R','4(RP)R','5(R)']},'6-6':{t:'count',p:'3(R)2(U)3(LI)',k:2},
+  '7-3':{t:'predict',p:'FF|UP'},'7-6':{t:'choose',o:['FFFRU|RUP','FFRU|RUP','FFFRR|RUP']},
+  '8-3':{t:'choose',o:['5(RDIU)R','5(RDPU)R','5(RDU)R']},'8-6':{t:'debug',p:'FURF|3(RI)'}
+};
 const done=id=>(S.best[id]||0)>0||!!S.skip[id];
 /* เปิดได้ทุกด่านจนถึงด่านถัดจากด่านไกลสุดที่ผ่านแล้ว (ด่านใหม่ที่แทรกทีหลังจึงไม่ล็อกด่านที่เคยไปถึง) */
 const maxDone=()=>{let m=-1;for(const l of ALL)if(done(l.id))m=l.idx;return m};
@@ -1084,7 +1142,7 @@ function restore(h){P.prog=loadProg(h.p);const nd=h.li>=0?P.prog[h.s][h.li]:null
 function selIsCard(){const L=P.sel&&locate(P.sel);return !!(L&&L.nd.t!=='loop')}
 function startLevel(idx){const lv=ALL[idx];if(lv)playLevel(lv)}
 function playLevel(lv){
-  if(P)P.abort=true;closeSheet();stopVoice();
+  if(P)P.abort=true;closeSheet();stopVoice();$('#play').classList.remove('quiz','qc');
   P={lv,m:lv.m,prog:{main:[],fn:[]},target:{s:'main',loop:null},sel:null,running:false,abort:false,ran:false,fails:0,uid:0,
      hero:{x:lv.m.hero.x,y:lv.m.hero.y},stars:new Set(lv.m.stars),runCfg:false,dots:null,hintSaid:false,won:false,hist:[],runStart:0,queue:[]};
   if(lv.kind!=='step'&&!lv.custom){const d=S.drafts[lv.id];if(d)P.prog=loadProg(d);else if(lv.start)P.prog=loadProg(lv.start)}
@@ -1097,7 +1155,7 @@ function playLevel(lv){
   else setTimeout(()=>{if(P&&P.lv===lv&&!P.running)speak(say.cur)},450);
 }
 /* โจทย์ของด่านแสดงค้างไว้เสมอ ข้อความใหม่ (เช่น ชนแล้ว) เด่นขึ้นจนกว่าจะแก้การ์ดหรือร่ายใหม่ */
-function calm(){if(!P||(P.demo&&!P.demoStop))return;const k=KIND_SAY[P.lv.kind],el=$('#say');el.classList.remove('hot');$('#sayText').textContent=VOICE[k];say.cur=k;$('#sayFace').innerHTML=art('wizard',A.wizard)}
+function calm(){if(!P||(P.demo&&!P.demoStop))return;if(P.quiz){const q=P.quiz,id=q.done?(q.ok?'q_right':'q_show'):q.voice;$('#say').classList.remove('hot');$('#sayText').textContent=VOICE[id];say.cur=id;$('#sayFace').innerHTML=art('wizard',A.wizard);return}const k=KIND_SAY[P.lv.kind],el=$('#say');el.classList.remove('hot');$('#sayText').textContent=VOICE[k];say.cur=k;$('#sayFace').innerHTML=art('wizard',A.wizard)}
 function levelSay(){calm();speak(say.cur)}
 function say(text,voiceId){
   const el=$('#say');$('#sayText').textContent=text;$('#sayFace').innerHTML=art('wizard',A.wizard);
@@ -1111,7 +1169,7 @@ function layout(){
     /* แนวตั้ง: กระดานสูงเท่าที่ต้องใช้ (ไม่เกิน 60% ของจอ) แล้วจองที่แผงการ์ดให้พอสำหรับคาถาเฉลย (วัดจริง) ช่องกระดานเล็กสุด 38px */
     const W=stage.clientWidth||innerWidth-16,cell=Math.min(84,Math.floor((W-16)/m.w));
     const over=$('#play .hud').offsetHeight+$('#say').offsetHeight+36;
-    const maxS=Math.min(over+cell*m.h,Math.round(innerHeight*.6)),minS=Math.min(maxS,over+38*m.h);
+    const share=P.quiz?(P.quiz.t==='choose'&&!P.quiz.done?.46:.52):.6,maxS=Math.min(over+cell*m.h,Math.round(innerHeight*share)),minS=Math.min(maxS,over+38*m.h);
     stage.style.flexBasis=maxS+'px';
     const sol=P.lv.solP;
     if(sol&&P.lv.kind!=='step'&&!P.demo){
@@ -1126,6 +1184,8 @@ function layout(){
         fitted=true;
       }catch(e){}finally{P.prog=real;P.target=realT;P.sel=realS;renderProg()}
     }
+    /* คำถามชวนคิด: ถ้าคาถาหรือตัวเลือกล้นแผง ย่อกระดานลงให้เห็นครบ */
+    if(P.quiz){panel.classList.remove('tight','onerow','qtight');const ov=quizOver();if(ov>0)stage.style.flexBasis=Math.max(minS,maxS-ov-6)+'px'}
   }else stage.style.flexBasis='';
   const r=$('#boardWrap').getBoundingClientRect();
   const c=Math.max(30,Math.min(104,Math.floor(Math.min((r.width-16)/m.w,(r.height-20)/m.h))));
@@ -1138,6 +1198,8 @@ function layout(){
   /* ขนาดการ์ดในแผงขึ้นกับความสูงแผง และความสูงแผงขึ้นกับขนาดการ์ด: รอบที่ 3 ล็อกขนาดเดิมไว้ ไม่ให้วนกลับไปล้น */
   if(!(fitted&&d>=2&&prevCp))pal.style.setProperty('--cp',cp+'px');
   panel.classList.toggle('onerow',panel.classList.contains('tight')&&$('#prog').clientHeight<135);
+  /* คำถามชวนคิด: ปกติไม่ย่อแผง ถ้ายังล้น (จอเตี้ย/แนวนอน) ใช้แบบกะทัดรัด: ซ่อนข้อความซ้ำกับพ่อมด การ์ดและปุ่มเล็กลง */
+  if(P.quiz){panel.classList.remove('tight','onerow','qtight');if(quizOver()>0)panel.classList.add('qtight','tight')}
   fitStrips();
   if(innerHeight>innerWidth&&d<2&&(d===0||pal.style.getPropertyValue('--cp')!==prevCp)){layout.depth=d+1;try{layout()}finally{layout.depth=d}}
 }
@@ -1166,11 +1228,12 @@ function renderEnts(){
   if(!P.runCfg)m.rand.forEach(k=>{const[x,y]=k.split(',');h+=`<div class="ent q" style="--x:${x};--y:${y}">${A.q()}</div>`});
   P.stars.forEach(k=>{const[x,y]=k.split(',');h+=`<div class="ent star" data-k="${k}" style="--x:${x};--y:${y}">${art('star',A.star)}</div>`});
   (P.dots||[]).forEach(k=>{const[x,y]=k.split(',');h+=`<div class="ent dot${P.stars.has(k)?' on-star':''}" style="--x:${x};--y:${y}"><i></i></div>`});
+  const q=P.quiz;if(q&&q.marks)q.marks.forEach((k,i)=>{if(q.done&&i!==q.right)return;const[x,y]=k.split(',');const busy=P.stars.has(k)||m.rand.includes(k)||(m.cat.x==x&&m.cat.y==y);h+=`<div class="ent qm ${busy&&!q.done?'corner':''} ${q.done?'q-ok':q.bad.has(i)?'q-bad':''}" style="--x:${x};--y:${y}"><button data-qa="${i}" aria-label="${tx('ช่องเลข ','Square ')}${i+1}">${i+1}</button></div>`});
   h+=`<div class="ent hero" id="hero" style="--x:${P.hero.x};--y:${P.hero.y}"><div class="hb"><div class="hf">${heroArt()}</div></div></div>`;
   $('#ents').innerHTML=h;
 }
 function renderHud(){
-  const lv=P.lv,title=lv.custom==='demo'?tx('ตัวอย่าง','Demo'):lv.custom==='test'?tx('ทดลองเล่น','Test Play'):lv.custom?tx('ด่านของ '+esc(lv.by||'เพื่อน'),lv.by?esc(lv.by)+'’s level':'Friend’s level'):`<i class="lv-w">${tx('ด่าน','Level')} </i>${lv.id}`;
+  const lv=P.lv,title=lv.custom==='quiz'?tx('คำถามชวนคิด','Think time'):lv.custom==='demo'?tx('ตัวอย่าง','Demo'):lv.custom==='test'?tx('ทดลองเล่น','Test Play'):lv.custom?tx('ด่านของ '+esc(lv.by||'เพื่อน'),lv.by?esc(lv.by)+'’s level':'Friend’s level'):`<i class="lv-w">${tx('ด่าน','Level')} </i>${lv.id}`;
   $('#lvName').innerHTML=`<b>${title}</b><span>${lv.w.name}</span>`;
   $('#btnHint').hidden=P.fails<2;updateGoal();renderSpeed();
 }
@@ -1193,7 +1256,7 @@ function cardHTML(nd){
 }
 function loopHTML(nd){
   const tgt=P.target.loop===nd.id;
-  return `<div class="loop ${tgt?'tgt':''} ${P.sel===nd.id?'sel':''}" data-loop="${nd.id}"><button class="loop-head" data-lhead="${nd.id}" aria-label="${tx('วงทำซ้ำ แตะเพื่อเลือก','Repeat loop, tap to select')}">${CARDS.loop.icon}</button><button class="loop-n" data-lcount="${nd.id}" aria-label="${tx(`จำนวนรอบ ${nd.n} แตะเพื่อเปลี่ยน`,`${nd.n} times, tap to change`)}">×${nd.n}</button><div class="loop-body">${nd.body.map(cardHTML).join('')}<button class="slot ${tgt?'on':''}" data-slot="loop:${nd.id}" aria-label="${tx('วางการ์ดในวง','Add a card to the loop')}">+</button></div></div>`;
+  return `<div class="loop ${tgt?'tgt':''} ${P.sel===nd.id?'sel':''}" data-loop="${nd.id}"><button class="loop-head" data-lhead="${nd.id}" aria-label="${tx('วงทำซ้ำ แตะเพื่อเลือก','Repeat loop, tap to select')}">${CARDS.loop.icon}</button><button class="loop-n" data-lcount="${nd.id}" aria-label="${tx(`จำนวนรอบ ${nd.n} แตะเพื่อเปลี่ยน`,`${nd.n} times, tap to change`)}">×${P.quiz&&P.quiz.hide===nd.id?'?':nd.n}</button><div class="loop-body">${nd.body.map(cardHTML).join('')}<button class="slot ${tgt?'on':''}" data-slot="loop:${nd.id}" aria-label="${tx('วางการ์ดในวง','Add a card to the loop')}">+</button></div></div>`;
 }
 function stripHTML(s,label,short){
   const on=P.target.s===s&&!P.target.loop,step=P.lv.kind==='step';
@@ -1433,6 +1496,92 @@ function ghost(prog,half){
   if(!half&&prog.fn.length)h=`<div class="g-row"><b>${tx('คาถาของฉัน','My spell')}</b>${ghostList(prog.fn)}</div>`+h;
   return h;
 }
+/* ---------- คำถามชวนคิด (หน้าเล่นโหมด quiz): ดูการ์ด → ทาย → พ่อมดร่ายให้ดูผลจริง ---------- */
+const quizDue=lv=>!!(lv&&!lv.custom&&QUIZ[lv.id]&&S.quizOn!==false&&!S.quiz[lv.id]);
+/* สลับลำดับตัวเลือกแบบคงที่ต่อคำถาม (ข้อถูกจะไม่อยู่ข้อ 1 ตลอด) */
+function seedOrder(id,n){let h=7;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;const a=[...Array(n).keys()];for(let i=n-1;i>0;i--){h=(h*1103515245+12345)>>>0;const j=(h>>>8)%(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
+function buildQuiz(src){
+  const spec=QUIZ[src.id];if(!spec)return null;const m=src.m,all=[...m.stars,...m.rand];
+  const q={id:src.id,t:spec.t,tries:0,done:false,ok:false,bad:new Set()},wins=str=>evaluate(m,parseSol(str)).ok;
+  if(spec.t==='predict'){
+    const end=trace(m,parseSol(spec.p),all).end,ek=end.x+','+end.y,[main,fn0]=spec.p.split('|'),fn=fn0?'|'+fn0:'',flip={U:'D',D:'U',L:'R',R:'L'};
+    const endOf=str=>{const t=trace(m,parseSol(str),all);return t.res.r==='bump'||t.res.r==='nostar'?null:t.end};
+    /* ตัวลวงมาจากความผิดที่เด็กมักทำ: ลืมใบสุดท้าย, สลับทิศหนึ่งใบ, เดินเกินหนึ่งก้าว แล้วค่อยช่องข้าง ๆ */
+    const cand=[endOf(main.slice(0,-1)+fn)];
+    for(let i=main.length-1;i>=0;i--)if(flip[main[i]])cand.push(endOf(main.slice(0,i)+flip[main[i]]+main.slice(i+1)+fn));
+    cand.push(endOf(main+main.slice(-1)+fn));for(const d in MOVES)cand.push({x:end.x+MOVES[d][0],y:end.y+MOVES[d][1]});
+    const keys=[ek];
+    for(const c of cand){if(!c)continue;const k=c.x+','+c.y;if(keys.includes(k)||c.x<0||c.y<0||c.x>=m.w||c.y>=m.h||m.walls.has(k)||(c.x===m.hero.x&&c.y===m.hero.y))continue;keys.push(k);if(keys.length===3)break}
+    q.marks=seedOrder(src.id,keys.length).map(i=>keys[i]);q.right=q.marks.indexOf(ek);q.prog=spec.p;q.voice='q_predict';
+  }else if(spec.t==='choose'){
+    q.opts=seedOrder(src.id,spec.o.length).map(i=>spec.o[i]);q.right=q.opts.findIndex(wins);
+    q.voice=m.rand.length?'q_choose_rand':'q_choose';const fns=[...new Set(q.opts.map(o=>o.split('|')[1]||''))];q.fn=fns.length===1?fns[0]:'';
+  }else if(spec.t==='count'){
+    const pr=parseSol(spec.p),L=pr.main[spec.k],ok=[];for(let n=1;n<=6;n++){L.n=n;ok.push(evaluate(m,pr).ok)}
+    const c=ok.indexOf(true)+1,near=[1,2,3,4,5,6].filter(n=>!ok[n-1]).sort((a,b)=>Math.abs(a-c)-Math.abs(b-c)||a-b).slice(0,2);
+    q.nums=[c,...near].sort((a,b)=>a-b);q.right=q.nums.indexOf(c);q.n=c;q.k=spec.k;q.prog=spec.p;q.voice='q_count';
+  }else{q.prog=spec.p;q.voice='q_debug'}
+  return q;
+}
+/* ด่านดีบัก: การ์ดใบไหนเปลี่ยนเป็นการ์ดอื่นใบเดียวแล้วผ่าน = ตอบใบนั้นถูก */
+function debugFixes(){
+  const fix={},cards=P.lv.cards.filter(c=>c!=='loop'),walk=(list,s)=>list.forEach(n=>{if(n.t==='loop')return walk(n.body,s);const o=n.t;
+    for(const c of cards){if(c===o||(c==='F'&&s==='fn'))continue;n.t=c;if(evaluate(P.m,P.prog).ok&&!fix[n.id])fix[n.id]=c}n.t=o});
+  walk(P.prog.main,'main');walk(P.prog.fn,'fn');return fix;
+}
+function playQuiz(src){
+  const q=buildQuiz(src);if(!q)return quizNext(src);
+  if(P)P.abort=true;closeSheet();stopVoice();
+  const lv={custom:'quiz',w:src.w,wi:src.wi,m:src.m,cards:src.cards,kind:'go',id:'q'+src.id,par:null,solP:null,src};
+  P={lv,m:lv.m,prog:{main:[],fn:[]},target:{s:'main',loop:null},sel:null,running:false,abort:false,ran:false,fails:0,uid:0,
+     hero:{x:lv.m.hero.x,y:lv.m.hero.y},stars:new Set(lv.m.stars),runCfg:false,dots:null,hintSaid:true,won:false,hist:[],runStart:0,queue:[],quiz:q};
+  if(q.prog){P.prog=loadProg(q.prog);if(q.t==='count'){const L=P.prog.main[q.k];L.n=q.n;q.hide=L.id}if(q.t==='debug')q.fix=debugFixes()}
+  $('#play').classList.add('quiz');$('#play').classList.toggle('qc',q.t==='choose');show('play');
+  requestAnimationFrame(()=>{if(P&&P.quiz===q){renderBoard();renderPalette();renderProg();renderCtrls();renderHud();renderQuiz();calm();layout()}});
+  setTimeout(()=>{if(P&&P.quiz===q&&!q.done)speak(q.voice)},450);
+}
+function renderQuiz(){
+  const q=P&&P.quiz,el=$('#qpanel');if(!q){el.innerHTML='';return}
+  const cls=i=>q.done&&i===q.right?'q-ok':q.bad.has(i)?'q-bad':'';let h='';
+  if(q.t==='predict')h+=`<div class="q-ask ${q.done?'q-res':''}">${q.done?tx(`คำตอบคือเลข ${q.right+1}`,`The answer is ${q.right+1}`):tx('ตัวเราจะไปหยุดที่เลขไหน แตะเลขบนกระดานหรือปุ่มนี้','Where will you stop? Tap a number on the board or here.')}</div>${q.done?'':`<div class="q-ch">${q.marks.map((k,i)=>`<button class="q-num ${cls(i)}" data-qa="${i}">${i+1}</button>`).join('')}</div>`}`;
+  else if(q.t==='count')h+=`<div class="q-ask ${q.done?'q-res':''}">${q.done?tx(`ต้องทำซ้ำ ${q.n} รอบ`,`It needs ${q.n} turns`):tx('วงที่มี ? ต้องทำซ้ำกี่รอบ','How many turns for the loop with ?')}</div><div class="q-ch">${q.nums.map((n,i)=>q.done&&i!==q.right?'':`<button class="q-num ${cls(i)}" data-qa="${i}">×${n}</button>`).join('')}</div>`;
+  else if(q.t==='debug')h+=`<div class="q-ask ${q.done?'q-res':''}">${q.done?tx('เปลี่ยนการ์ดใบที่ผิดแล้ว ร่ายดูกัน','The wrong card is fixed. Let’s cast it.'):tx('แตะการ์ดที่ผิดในคาถาด้านบน','Tap the wrong card in the spell above.')}</div>`;
+  else{
+    if(q.done)h+=`<div class="q-ask q-res">${tx(`ข้อ ${q.right+1} ใช้ได้`,`Number ${q.right+1} works`)}</div>`;
+    else{if(q.fn)h+=`<div class="q-fn">${CARDS.F.icon}<b>${tx('คาถาประกาย','Sparkle spell')}</b><span class="g-row">${ghostList(parseSol(q.fn).main)}</span></div>`;
+      h+=q.opts.map((o,i)=>`<button class="q-opt ${cls(i)}" data-qa="${i}" aria-label="${tx('คาถาข้อ ','Spell ')}${i+1}"><span class="q-badge">${i+1}</span><span class="g-row">${ghostList(parseSol(o).main)}</span></button>`).join('')}
+  }
+  h+=`<div class="q-foot">${q.done?(!q.ran||P.running?'':`<span></span><button class="btn-gold" data-qact="next">${tx('ด่านต่อไป','Next level')}${ICON.next}</button>`):`<button class="btn-soft sm" data-qact="skip">${tx('ข้ามคำถาม','Skip')}</button><span></span>`}</div>`;
+  el.innerHTML=h;
+}
+async function quizAnswer(a){
+  const q=P&&P.quiz;if(!q||q.done||P.running||q.bad.has(a))return;ac();
+  const right=q.t==='debug'?!!q.fix[a]:a===q.right;q.tries++;
+  if(!right){q.bad.add(a);SFX.err();renderQuiz();renderEnts();if(q.t==='debug')renderProg();
+    if(q.tries<2){say(VOICE.q_wrong,'q_wrong');return}}
+  q.done=true;q.ok=right;S.quiz[q.id]={ok:right?1:0,t:q.tries};const fresh=awardStickers();save();
+  if(right)SFX.pick();say(VOICE[right?'q_right':'q_show'],right?'q_right':'q_show');
+  renderQuiz();renderEnts();if(fresh.length)setTimeout(()=>toast(tx('ได้สติกเกอร์ใหม่!','New sticker!')),1200);
+  const me=P;await sleep(900);let n=0;while(P===me&&voiceBusy()&&n++<14)await sleep(300);
+  if(P===me)await quizRun(right&&q.t==='debug'?a:null);
+}
+/* ร่ายคาถาของคำถามให้ดูผลจริง (ข้อเลือกใช้คาถาข้อที่ถูก · ดีบักเปลี่ยนการ์ดที่ผิดก่อน) */
+async function quizRun(fixId){
+  const me=P,q=me.quiz;
+  if(q.t==='choose'){P.prog=loadProg(q.opts[q.right]);$('#play').classList.remove('qc')}
+  if(q.t==='count')q.hide=null;
+  if(q.t==='debug'){const id=fixId||Object.keys(q.fix)[0],L=locate(id);renderProg();markErr(id);await sleep(800);if(P!==me)return;
+    if(L){L.nd.t=q.fix[id];renderProg();const el=$(`#prog [data-id="${id}"]`);el&&el.classList.add('new');SFX.tap();await sleep(700);if(P!==me)return}}
+  me.running=true;renderProg();renderQuiz();clearRun();requestAnimationFrame(layout);await sleep(250);if(P!==me)return;
+  const ev=evaluate(me.m,me.prog);me.ran=true;
+  if(me.m.rand.length){me.runCfg=true;me.stars=new Set(ev.cfg);renderEnts();$$('.ent.star').forEach(s=>s.classList.add('pop'));SFX.pick();await sleep(650)}
+  await playEvents(ev.t.ev,me);if(P!==me)return;me.running=false;clearRun();
+  if(ev.t.res.r==='win'){SFX.win();const h=$('#hero');h&&h.classList.add('cheer');puff(me.m.cat.x,me.m.cat.y-.15,'♥')}
+  q.ran=true;renderQuiz();
+}
+function quizOver(){const pg=$('#prog'),qp=$('#qpanel');return Math.max(0,pg.scrollHeight-pg.clientHeight)+Math.max(0,qp.scrollHeight-qp.clientHeight)}
+function quizEnd(skip){const q=P.quiz;if(!q||P.running)return;if(skip&&!q.done){S.quiz[q.id]={sk:1,t:q.tries};save()}stopVoice();quizNext(P.lv.src)}
+function quizNext(src){$('#play').classList.remove('quiz','qc');const nx=ALL[src.idx+1];if(nx)startLevel(nx.idx);else{show('map');renderMap()}}
 function openIntro(w){
   S.seen['w'+w.n]=1;save();
   const nc={1:['U','D','L','R'],2:[],3:['P'],4:[],5:['loop'],6:['I'],7:['F'],8:[]}[w.n];
@@ -1486,6 +1635,7 @@ function openParent(){
     <div class="set"><span>${tx('เสียงพากย์','Voice')}</span>${tog('voice')}</div>
     <div class="set"><span>${tx('เสียงเอฟเฟกต์','Sound effects')}</span>${tog('sfx')}</div>
     <div class="set"><span>${tx('ปลดล็อกทุกด่าน (เด็กโต)','Unlock all levels (older kids)')}</span>${tog('unlockAll')}</div>
+    <div class="set"><span>${tx('คำถามชวนคิดระหว่างด่าน','Think questions between levels')}</span>${tog('quizOn')}</div>
     <div class="set col"><span>${tx('สำหรับพ่อแม่','For parents')}</span><div class="row"><button class="btn-soft sm" data-act="report">${tx('ผลเล่นรายด่าน','Level report')}</button><button class="btn-soft sm" data-act="assets">${tx('ไฟล์ภาพและเสียง','Picture & sound files')}</button></div></div>
     <div class="set col"><span>${tx('ย้ายความคืบหน้าไปเครื่องอื่น','Move progress to another device')}</span><div class="row"><button class="btn-soft sm" data-act="export">${tx('คัดลอกรหัส','Copy code')}</button><button class="btn-soft sm" data-act="import">${tx('ใส่รหัส','Enter code')}</button></div></div>
     <div class="row end"><button class="btn-soft sm danger" data-act="reset">${tx('ล้างความคืบหน้า','Reset progress')}</button><button class="btn-gold" data-act="close">${tx('เสร็จ','Done')}</button></div>
@@ -1562,16 +1712,17 @@ function openReport(){
   const body=!any?`<p class="p">${tx('ยังไม่มีข้อมูล ให้ลีอาเล่นก่อน แล้วค่อยกลับมาดูนะ','No data yet. Play some levels first, then come back.')}</p>`:WORLDS.map((w,wi)=>{const lvs=ALL.filter(l=>l.wi===wi&&played(l));if(!lvs.length)return '';
     return `<div class="rep-w">${wi+1}. ${w.name}</div><div class="rep">${tx('<b>ด่าน</b><b>ดาว</b><b>ลองกี่ครั้ง</b><b>การ์ด/เป้า</b><b>คำใบ้</b><b>เวลา</b>','<b>Level</b><b>Stars</b><b>Tries</b><b>Cards</b><b>Hint</b><b>Time</b>')}${lvs.map(l=>{const s=S.stat[l.id]||{},b=S.best[l.id]||0,tg=toughLv(l);
       return `<span class="${tg?'tough':''}">${l.id}</span><span>${b?'★'.repeat(b):S.skip[l.id]?tx('ข้าม','skip'):'–'}</span><span>${s.fw||(s.r?tx('ยัง (','not yet (')+s.r+')':'–')}</span><span>${s.n?s.n+'/'+l.par:'–/'+l.par}</span><span>${s.h?(l.kind==='step'?tx('ดูจุด','dots'):tx('ขั้น ','')+s.h):'–'}</span><span>${s.t?Math.max(1,Math.round(s.t/60000))+tx(' น.','m'):'–'}</span>`}).join('')}</div>`}).join('');
-  const tough=ALL.filter(l=>played(l)&&toughLv(l));
+  const tough=ALL.filter(l=>played(l)&&toughLv(l)),qz=Object.keys(QUIZ).filter(id=>S.quiz[id]);
+  const qh=qz.length?`<div class="rep-w">${tx('คำถามชวนคิด','Think questions')}</div><p class="small">${qz.map(id=>{const r=S.quiz[id];return id+' '+(r.sk?tx('ข้าม','skipped'):r.ok?(r.t===1?'✓':tx(`✓ (ครั้งที่ ${r.t})`,`✓ (try ${r.t})`)):tx('ดูเฉลย','saw answer'))}).join(' · ')}</p>`:'';
   sheet(`<div class="parent"><div class="win-title small">${tx('ผลเล่นรายด่าน','Level report')}</div>
     ${tough.length?`<p class="small">${tx('ด่านที่ควรดู (สีส้ม): ','Levels to look at (orange): ')}${tough.map(l=>l.id).join(', ')}</p>`:any?`<p class="small">${tx('ยังไม่มีด่านที่ติดนาน','No hard levels so far.')}</p>`:''}
-    ${body}
+    ${body}${qh}
     ${any?`<p class="tiny">${tx('กด "คัดลอกรายงาน" แล้ววางในแชตกับ Claude เพื่อปรับเป้า 3 ดาวและความยากให้พอดีกับลีอา','Tap "Copy report" and paste it in a chat with Claude to tune the 3-star goals and difficulty.')}</p>`:''}
     <div class="row end"><button class="btn-soft" data-act="parent">${ICON.back}${tx('กลับ','Back')}</button>${any?`<button class="btn-gold" data-act="repcopy">${tx('คัดลอกรายงาน','Copy report')}</button>`:''}</div></div>`,true);
 }
 function reportText(){
   const d=new Date(),lines=ALL.filter(played).map(l=>{const s=S.stat[l.id]||{};return `${l.id} s${S.best[l.id]||0}${S.skip[l.id]?' skip':''} r${s.r||0} w${s.w||0} fw${s.fw||0} n${s.n||0}/${l.par} h${s.h||0} t${Math.round((s.t||0)/60000)}`});
-  return tx(`ผลเล่นการ์ดเวทมนตร์ v${VERSION} ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}\n(s=ดาว r=ร่ายทั้งหมด w=ผ่าน fw=ร่ายครั้งที่ผ่านครั้งแรก n=การ์ดน้อยสุด/เป้า h=คำใบ้ขั้นสูงสุด t=นาที)\n`,`Magic Cards report v${VERSION} ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}\n(s=stars r=total casts w=wins fw=cast number of first win n=fewest cards/goal h=highest hint step t=minutes)\n`)+lines.join('\n');
+  return tx(`ผลเล่นการ์ดเวทมนตร์ v${VERSION} ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}\n(s=ดาว r=ร่ายทั้งหมด w=ผ่าน fw=ร่ายครั้งที่ผ่านครั้งแรก n=การ์ดน้อยสุด/เป้า h=คำใบ้ขั้นสูงสุด t=นาที)\n`,`Magic Cards report v${VERSION} ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}\n(s=stars r=total casts w=wins fw=cast number of first win n=fewest cards/goal h=highest hint step t=minutes)\n`)+lines.join('\n')+(()=>{const q=Object.keys(QUIZ).filter(id=>S.quiz[id]).map(id=>{const r=S.quiz[id];return `Q${id} ${r.sk?'skip':r.ok?'ok':'shown'} t${r.t}`});return q.length?'\n'+q.join('\n'):''})();
 }
 /* ตรวจว่าอัปไฟล์ภาพ เสียง วิดีโอขึ้นแล้วกี่ไฟล์ */
 async function openAssets(){
@@ -1597,7 +1748,7 @@ function act(a,el){
       if(P.lv.kind==='step'){P.prog.main=[];P.hero={x:P.m.hero.x,y:P.m.hero.y}}
       else if(P.lastStars===3){P.prog=P.lv.start?loadProg(P.lv.start):{main:[],fn:[]};P.target={s:'main',loop:null};P.hist=[]}
       P.ran=true;resetRunView();calm();renderProg();renderCtrls();break;
-    case 'next':closeSheet();ALL[P.lv.idx+1]?startLevel(P.lv.idx+1):(show('map'),renderMap());break;
+    case 'next':closeSheet();if(quizDue(P.lv)){playQuiz(P.lv);break}ALL[P.lv.idx+1]?startLevel(P.lv.idx+1):(show('map'),renderMap());break;
     case 'world':openWorldDone(P.lv.w);break;
     case 'map':closeSheet();show('map');renderMap();break;
     case 'ending':openEnding();break;
@@ -1650,6 +1801,7 @@ const STK=[
   {id:'maker',get name(){return tx('นักสร้างด่าน','Level Maker')},get how(){return tx('สร้างด่านเองแล้วเล่นผ่าน','Make a level and win it')},ok:()=>!!S.flags.creator,art:()=>petArt(),bg:'#FCEAF0'},
   {id:'buddy',get name(){return tx('เพื่อนซี้','Best Buddy')},get how(){return tx('เล่นด่านที่เพื่อนส่งมาจนผ่าน','Win a level a friend sent you')},ok:()=>!!S.flags.friend,art:()=>art('princess',A.princess),bg:'#FCEAF0'}
 ];
+STK.push({id:'think',get name(){return tx('นักคิด','Big Thinker')},get how(){return tx('ตอบคำถามชวนคิดถูก 8 ข้อ','Get 8 think questions right')},ok:()=>Object.values(S.quiz||{}).filter(r=>r.ok).length>=8,art:()=>`<div class="stk-num">${ICON.bulb}<b>8</b></div>`,bg:'#FFF3D6'});
 function awardStickers(){const fresh=[];for(const s of STK)if(!S.stickers[s.id]&&s.ok()){S.stickers[s.id]=Date.now();fresh.push(s)}return fresh}
 function stkHTML(s,got,how,i=0){return `<div class="stk ${s.gold?'gold':''} ${got?'':'off'}" style="--bg:${s.bg};--r:${(i%5-2)*2}deg"><div class="stk-art">${s.art()}</div>${s.gold?`<div class="stk-badge">${ICON.star}</div>`:''}<div class="stk-name">${got?s.name:tx('ยังไม่ได้','Not yet')}</div>${!got&&how?`<div class="stk-how">${s.how}</div>`:''}</div>`}
 function stkNew(list){return list.length?`<div class="newst"><div class="small">${tx('ได้สติกเกอร์ใหม่!','New sticker!')}</div><div class="stk-row">${list.map((s,i)=>stkHTML(s,true,false,i)).join('')}</div></div>`:''}
@@ -1830,6 +1982,7 @@ $('#ov').addEventListener('click',e=>{if(e.target===$('#ov')&&$('#ov').dataset.d
 $('#palette').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b)addCard(b.dataset.add)});
 $('#prog').addEventListener('click',e=>{
   const sa=e.target.closest('[data-scroll]');if(sa){const sc=sa.parentElement.querySelector('.strip-cards');sc.scrollBy({left:+sa.dataset.scroll*sc.clientWidth*.7,behavior:'smooth'});SFX.tap();return}
+  if(P&&P.quiz){const c=e.target.closest('[data-id]');if(c&&P.quiz.t==='debug')quizAnswer(c.dataset.id);return}
   if(!P||P.running||P.won||P.lv.kind==='step')return;
   const t=e.target.closest('[data-lcount],[data-lhead],[data-id],[data-slot],[data-strip]');if(!t)return;SFX.tap();
   if(t.dataset.lcount){const L=locate(t.dataset.lcount);if(L){snap();L.nd.n=L.nd.n>=6?2:L.nd.n+1;P.sel=null;afterEdit()}return}
@@ -1839,10 +1992,13 @@ $('#prog').addEventListener('click',e=>{
   if(t.dataset.strip){P.target={s:t.dataset.strip,loop:null};P.sel=null;renderProg();renderCtrls()}
 });
 $('#btnUndo').onclick=undo;$('#btnClear').onclick=clearAll;$('#btnRun').onclick=runProgram;
-$('#btnBack').onclick=()=>{stopVoice();if(P&&(P.lv.custom==='test'||P.lv.own))openEditor();else if(P&&P.lv.custom){show('home');renderHome()}else{show('map');renderMap()}};
+$('#btnBack').onclick=()=>{stopVoice();if(P&&P.quiz){show('map');renderMap()}else if(P&&(P.lv.custom==='test'||P.lv.own))openEditor();else if(P&&P.lv.custom){show('home');renderHome()}else{show('map');renderMap()}};
 $('#btnSay').onclick=$('#lvName').onclick=()=>{if(P){ac();levelSay()}};
 $('#btnHelp').onclick=()=>{if(!P||P.running)return;P.lv.custom?openCustomHelp():openIntro(P.lv.w)};
 $('#btnHint').onclick=openHint;
+$('#board').addEventListener('click',e=>{const b=e.target.closest('[data-qa]');if(b&&P&&P.quiz){SFX.tap();quizAnswer(+b.dataset.qa)}});
+$('#qpanel').addEventListener('click',e=>{if(!P||!P.quiz)return;const a=e.target.closest('[data-qact]');if(a){SFX.tap();quizEnd(a.dataset.qact==='skip');return}
+  const b=e.target.closest('[data-qa]');if(b){SFX.tap();quizAnswer(+b.dataset.qa)}});
 $('#demoSkip').onclick=()=>{const b=demoSkipTo||demoBack;demoBack=demoSkipTo=null;stopDemo();b?b():(show('map'),renderMap())};
 $('#btnSpeed').onclick=()=>{S.fast=!S.fast;save();renderSpeed();toast(S.fast?tx('เดินเร็ว (กระต่าย)','Fast (rabbit)'):tx('เดินช้า (เต่า)','Slow (turtle)'))};
 $('#say').onclick=()=>{ac();if(say.cur)speak(say.cur)};
@@ -1870,7 +2026,7 @@ function setLang(l){
   const on=id=>$('#'+id).classList.contains('on');
   if(on('home'))renderHome();
   if(on('map'))renderMap();
-  if(on('play')&&P){renderHud();renderPalette();if(!P.running){renderProg();renderCtrls()}
+  if(on('play')&&P){renderHud();renderPalette();if(!P.running){renderProg();renderCtrls()}if(P.quiz){renderQuiz();renderEnts()}
     if(say.cur&&VOICE[say.cur])$('#sayText').textContent=VOICE[say.cur];requestAnimationFrame(layout)}
   if(on('edit')&&E){renderEditor();if(edSay.cur&&VOICE[edSay.cur])$('#edSayText').textContent=VOICE[edSay.cur]}
   if(!$('#ov').hidden&&$('#sheet .seg.lang'))openParent();
